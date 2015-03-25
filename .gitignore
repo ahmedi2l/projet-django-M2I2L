@@ -9,3 +9,6 @@ pycharm-professional-4.0.5.tar.gz
 RemoteSystemsTempFiles
 test
 tp1
+.metadata/
+.python-version
+.gitignore~
