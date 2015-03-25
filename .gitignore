@@ -1,0 +1,11 @@
+projetdjango/.idea/
+*.pyc
+projetdjango/db.sqlite3
+formation
+pycharm-4.0.5
+pycharm-community-4.0.5
+pycharm-community-4.0.5.tar.gz
+pycharm-professional-4.0.5.tar.gz
+RemoteSystemsTempFiles
+test
+tp1
