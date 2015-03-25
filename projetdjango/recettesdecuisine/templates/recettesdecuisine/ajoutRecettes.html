@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block contenu %}
+
+    <h1> Ajout d'une nouvelle recettes </h1>
+
+    <form method="post" action="{% url 'recettesdecuisine:ajoutRecettes' %}">
+        {% csrf_token %}
+
+        {{ formulaires.as_p }}
+        <input type="submit" value="Ok">
+    </form>
+
+{% endblock %}

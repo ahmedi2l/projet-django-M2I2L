@@ -1,0 +1,19 @@
+{% load staticfiles %} {# ou {% load static%} static est inclus dans staticfiles #}
+<!DOCTYPE html>
+
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+
+{% block contenu %} {%endblock%}
+
+{% comment %}
+<img src="{% static 'sondages/images/logo_ulco.png' %}" />
+{% endcomment %}
+
+</body>
+</html>
