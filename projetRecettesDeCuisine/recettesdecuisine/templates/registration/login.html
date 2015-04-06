@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1> Connexion </h1>
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <p class="error">Your username and password didn't match. Please try again.</p>
     {% endif %}
 
-    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+    <form action="{% url 'recettesdecuisine:auth_view' %}" method="post">
+        {% csrf_token %}
+        <label for="username"> User name : </label>
+        <input type="text" name="username" value="" id="username">
+        <label for="password"> Password : </label>
+        <input type="password" name="password" value="" id="password">
+
+        <input type="submit" value="login"/>
+    </form>
+
+    {% comment %}
+     {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    <form method="post" action="{% url 'recettesdecuisine:auth_view' %}">
         {% csrf_token %}
         <table>
             <tr>
@@ -22,5 +37,5 @@
         <input type="submit" value="login"/>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
-
+    {% endcomment %}
 {% endblock %}
