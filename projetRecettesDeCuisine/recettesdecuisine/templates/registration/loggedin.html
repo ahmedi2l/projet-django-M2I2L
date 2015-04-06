@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1> Bonjour {{username}}, vous êtes maintenant logué </h1>
+
+    <p>Cliquer <a href={%url 'recettesdecuisine:logout'%}> ici </a> pour vous déloguer </p>
+
+{% endblock %}
