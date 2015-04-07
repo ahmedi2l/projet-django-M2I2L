@@ -5,13 +5,13 @@ from .forms import RecetteForm
 
 from  django.contrib import auth
 from django.core.context_processors import csrf
-import sys
+from recettesdecuisine.forms import LoginForm
 
 # Create your views here.
 
 # @login_required()
 def index(request):
-    return render(request, 'recettesdecuisine/index.html',)
+    return render(request, 'recettesdecuisine/index.html', )
 
 
 def ajoutRecettes(request):
@@ -27,11 +27,22 @@ def ajoutRecettes(request):
     }
     return render(request, 'recettesdecuisine/ajoutRecettes.html', context)
 
+
 ###
 def login(request):
-    c={}
-    c.update(csrf(request))
-    return render_to_response('registration/login.html',c)
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            pass
+    else:
+        form = LoginForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request,'registration/login.html', context)
+
 
 def auth_view(request):
     username = request.POST.get('username')
@@ -39,25 +50,28 @@ def auth_view(request):
 
     user = auth.authenticate(username=username, password=password)
 
-    context={
-        'username':username,
-        'password':password,
-        'result':user,
+    context = {
+        'username': username,
+        'password': password,
+        'result': user,
     }
 
     if user is None:
-        return render(request,'registration/invalid_login.html',context)
+        return render(request, 'registration/invalid_login.html', context)
 
     else:
-        return render(request, 'registration/loggedin.html',context)
+        return render(request, 'registration/loggedin.html', context)
+
 
 def loggedin(request):
-    return render_to_response('registration/loggedin.html',{'full_name':request.user.username})
+    return render_to_response('registration/loggedin.html', {'full_name': request.user.username})
+
 
 def invalid_login(request):
-    c={}
+    c = {}
     c.update(csrf(request))
     return render_to_response('registration/invalid_login.html', c)
 
+
 def logout(request):
-    return render(request,'registration/logout.html')
+    return render(request, 'registration/logout.html')
