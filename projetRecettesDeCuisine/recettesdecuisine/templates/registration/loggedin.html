@@ -4,6 +4,9 @@
 
     <h1> Bonjour {{username}}, vous êtes maintenant logué </h1>
 
-     <p style="text-align: center;"> <a href={% url 'recettesdecuisine:logout' %}> Déconnexion</a> </p>
+    {% comment %}
+     <p style="text-align: center;"> <a href={% url 'logout' %}> Déconnexion</a> </p>
+    {% endcomment %}
+     <p style="text-align: center;"><a href="/accounts/logout/?next=/index/">Déconnexion</a></p>
 
 {% endblock %}

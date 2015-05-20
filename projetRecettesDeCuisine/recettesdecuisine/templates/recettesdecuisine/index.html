@@ -2,8 +2,9 @@
 
 {% block content %}
 
-    <h1> Recettes de cuisine </h1>
+    <h1 style="text-align: center"> Recettes de cuisine </h1>
 
-     <p style="text-align: center;"> <a href={% url 'recettesdecuisine:login' %}> Connexion</a> </p>
+     {# <p style="text-align: center;"> <a href={% url 'recettesdecuisine:login' %}> Connexion</a> </p> #}
+    <p style="text-align: center"> <a href={% url 'recettesdecuisine:loggedin' %}> Connexion</a> </p>
 
 {% endblock %}

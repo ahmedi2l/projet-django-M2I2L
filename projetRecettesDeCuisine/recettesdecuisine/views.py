@@ -29,49 +29,46 @@ def ajoutRecettes(request):
 
 
 ###
+"""
 def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            pass
+
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = auth.authenticate(username=username, password=password)
+
+            context = {
+                'username': username,
+                'password': password,
+                'result': user,
+            }
+
+            if user is None:
+                return render(request, 'registration/login_ok.html', context)
+            else:
+                return render(request, 'registration/loggedin.html', context)
+
     else:
         form = LoginForm()
 
     context = {
         'form': form,
     }
-    return render(request,'registration/login.html', context)
+    return render(request, 'registration/login_ok.html', context)
+"""
 
-
-def auth_view(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-
-    user = auth.authenticate(username=username, password=password)
-
-    context = {
-        'username': username,
-        'password': password,
-        'result': user,
-    }
-
-    if user is None:
-        return render(request, 'registration/invalid_login.html', context)
-
-    else:
-        return render(request, 'registration/loggedin.html', context)
-
-
+###
+@login_required()
 def loggedin(request):
-    return render_to_response('registration/loggedin.html', {'full_name': request.user.username})
-
-
-def invalid_login(request):
-    c = {}
-    c.update(csrf(request))
-    return render_to_response('registration/invalid_login.html', c)
+    context = {
+        'username': request.user.username
+    }
+    return render_to_response('registration/loggedin.html', context)
 
 
 def logout(request):
-    return render(request, 'registration/logout.html')
+    return render(request, 'registration/logged_out.html')

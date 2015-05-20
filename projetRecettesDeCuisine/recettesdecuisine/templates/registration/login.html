@@ -1,15 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> Connexion </h1>
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <p style="color: red;">Votre nom d'utilisateur et mot de passe ne correspondent pas. Veuillez essayer à nouveau.</p>
     {% endif %}
 
-    <form action="{% url 'recettesdecuisine:auth_view'%}" method="post" >
+    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Valider"/>
+        <table>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+        </table>
+
+        <input type="submit" value="login"/>
+        <input type="hidden" name="next" value="{{ next }}"/>
     </form>
+
 {% endblock %}
