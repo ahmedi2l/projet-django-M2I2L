@@ -8,7 +8,23 @@ class LoginForm(forms.Form):
     password = forms.CharField(label='Mot de passe', max_length=100, widget=forms.PasswordInput)
 
 
-class RecetteForm(ModelForm):
+class RecetteForm(forms.ModelForm):
     class Meta:
         model = Recette
-        fields = ['title', 'type']
+        #fields = ('title', 'type', 'difficulty', 'cost', 'preparationTime', 'cookTime', 'restTime')
+        labels = {
+            'title': "Titre",
+            'difficulty': "Difficulté",
+            'cost': 'Coût',
+            'preparationTime ': "Temps de préparation",
+            'cookTime': "Temps de cuisson",
+            'restTime': "Temps de repos",
+
+        }
+        help_texts = {
+            'difficulty': "Niveau de difficulté de la recette",
+            'cost': "€",
+            'preparationTime': "min.",
+            'cookTime': "min",
+            'restTime': "min",
+        }
