@@ -3,9 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm
 
-from  django.contrib import auth
+from django.contrib import auth
 from django.core.context_processors import csrf
-from recettesdecuisine.forms import LoginForm
+from recettesdecuisine.forms import CreateUserForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -72,3 +73,27 @@ def loggedin(request):
 
 def logout(request):
     return render(request, 'registration/logged_out.html')
+
+
+def createuser(request):
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+
+        if form.is_valid():
+
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            email = request.POST.get('email')
+
+            try:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                return render(request, 'registration/createuser.html', {'username': username, 'message': u"Le compte a été crée"})
+            except :
+                return render(request, 'registration/createuser.html', {'username': username, 'message': u"Le compte n'a pas pu être créé"})
+    else:
+        form = CreateUserForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'registration/createuser.html', context)

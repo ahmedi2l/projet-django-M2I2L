@@ -13,4 +13,5 @@ urlpatterns = patterns('',
                        url(r'^logout/$', views.logout, name='logout'),
                        url(r'^loggedin/$', views.loggedin, name='loggedin'),
                        url(r'^index/$', views.index, name='index'),
+                       url(r'^createuser/$', views.createuser, name='createuser'),
                        )
