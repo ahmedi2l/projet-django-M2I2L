@@ -7,7 +7,7 @@ from django.core import validators
 
 
 class Recette(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     TYPE_CHOICES=(
         ('entre','Entrée'),
         ('platPrincipal','Plat principal'),
