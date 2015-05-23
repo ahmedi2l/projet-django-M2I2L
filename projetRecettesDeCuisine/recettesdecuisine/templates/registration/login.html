@@ -2,6 +2,8 @@
 
 {% block content %}
 
+    <h1> Connexion </h1>
+
     {% if form.errors %}
         <p style="color: red;">Votre nom d'utilisateur et mot de passe ne correspondent pas. Veuillez essayer à nouveau.</p>
     {% endif %}
@@ -19,8 +21,10 @@
             </tr>
         </table>
 
-        <input type="submit" value="login"/>
+        <input type="submit" value="Se connecter"/>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
+
+    <p style="text-align: center"> <a href={% url 'recettesdecuisine:registerUser' %}> Créer un compte </a> </p>
 
 {% endblock %}

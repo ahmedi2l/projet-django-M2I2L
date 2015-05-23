@@ -5,17 +5,15 @@ from .forms import RecetteForm
 
 from django.contrib import auth
 from django.core.context_processors import csrf
-from recettesdecuisine.forms import CreateUserForm
-from django.contrib.auth.models import User
+from recettesdecuisine.forms import RegisterUserForm
 
 # Create your views here.
 
-# @login_required()
 def index(request):
     return render(request, 'recettesdecuisine/index.html', )
 
-
-def ajoutRecettes(request):
+# Ajout d'une recette
+def ajoutRecette(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
         formulaire = RecetteForm(request.POST)  # Nous reprenons les données
         if formulaire.is_valid():  # Nous vérifions que les données envoyées sont valides
@@ -28,41 +26,6 @@ def ajoutRecettes(request):
     }
     return render(request, 'recettesdecuisine/ajoutRecettes.html', context)
 
-
-###
-"""
-def login(request):
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-
-        if form.is_valid():
-
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-
-            user = auth.authenticate(username=username, password=password)
-
-            context = {
-                'username': username,
-                'password': password,
-                'result': user,
-            }
-
-            if user is None:
-                return render(request, 'registration/login_ok.html', context)
-            else:
-                return render(request, 'registration/loggedin.html', context)
-
-    else:
-        form = LoginForm()
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'registration/login_ok.html', context)
-"""
-
-###
 @login_required()
 def loggedin(request):
     context = {
@@ -70,30 +33,49 @@ def loggedin(request):
     }
     return render_to_response('registration/loggedin.html', context)
 
-
 def logout(request):
     return render(request, 'registration/logged_out.html')
 
 
-def createuser(request):
+# Création d'un compte utilisateur
+def registerUser(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            return HttpResponseRedirect("/registerUser_success")
+    else:
+        form = RegisterUserForm()
+    return render(request, "registration/registerUser.html", {
+        'form': form,
+    })
+
+
+def registerUser_success(request):
+    return render(request, 'registration/registerUser_success.html', )
+
+
+'''
+#Ancienne méthonde de création d'un utilisateur
+def registerUser(request):
     if request.method == "POST":
-        form = CreateUserForm(request.POST)
+        form = RegisterUserForm(request.POST)
 
         if form.is_valid():
-
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            email = request.POST.get('email')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            email = form.cleaned_data['email']
 
             try:
                 user = User.objects.create_user(username=username, email=email, password=password)
-                return render(request, 'registration/createuser.html', {'username': username, 'message': u"Le compte a été crée"})
+                return render(request, 'registration/registerUser_success.html', {'username': username, 'message': u"Le compte a été crée"})
             except :
-                return render(request, 'registration/createuser.html', {'username': username, 'message': u"Le compte n'a pas pu être créé"})
+                return render(request, 'registration/registerUser_success.html', {'username': username, 'message': u"Le compte n'a pas pu être créé"})
     else:
-        form = CreateUserForm()
+        form = RegisterUserForm()
 
     context = {
         'form': form,
     }
-    return render(request, 'registration/createuser.html', context)
+    return render(request, 'registration/registerUser.html', context)
+'''

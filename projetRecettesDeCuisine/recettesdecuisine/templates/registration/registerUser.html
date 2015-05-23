@@ -4,11 +4,11 @@
     <h1> Créer un nouveau compte </h1>
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <p>Veuillez corriger l'erreur ci-dessous :</p>
     {% endif %}
 
         {{message}}
-    <form action="{% url 'recettesdecuisine:createuser'%}" method="post" >
+    <form action="{% url 'recettesdecuisine:registerUser'%}" method="post" >
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Valider"/>
