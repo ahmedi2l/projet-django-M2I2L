@@ -7,24 +7,35 @@ from django.contrib import auth
 from django.core.context_processors import csrf
 from recettesdecuisine.forms import RegisterUserForm
 
+from recettesdecuisine.models import Recette
 # Create your views here.
 
 def index(request):
-    return render(request, 'recettesdecuisine/index.html', )
+    recettesList = Recette.objects.all().order_by('-creationDate')
+
+    contex = {
+        'recettesList': recettesList,
+    }
+    return render(request, 'recettesdecuisine/index.html', contex)
 
 # Ajout d'une recette
-def ajoutRecette(request):
+@login_required()
+def addRecette(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
-        formulaire = RecetteForm(request.POST)  # Nous reprenons les données
-        if formulaire.is_valid():  # Nous vérifions que les données envoyées sont valides
-            formulaire.save()
+        form = RecetteForm(request.POST)  # Nous reprenons les données
+        if form.is_valid():  # Nous vérifions que les données envoyées sont valides
+            try :
+                form.save()
+                return render(request, 'recettesdecuisine/addRecette_success.html',)
+            except :
+                pass
     else:
-        formulaire = RecetteForm()
+        form = RecetteForm()
 
     context = {
-        'formulaires': formulaire,
+        'form': form,
     }
-    return render(request, 'recettesdecuisine/ajoutRecettes.html', context)
+    return render(request, 'recettesdecuisine/addRecette.html', context)
 
 @login_required()
 def loggedin(request):
@@ -54,6 +65,8 @@ def registerUser(request):
 def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
+def addRecette_success(request):
+    return render(request, 'recettesdecuisine/addRecette_success.html', )
 
 '''
 #Ancienne méthonde de création d'un utilisateur

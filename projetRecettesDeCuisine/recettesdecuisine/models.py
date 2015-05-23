@@ -19,12 +19,14 @@ class Recette(models.Model):
         ('moyen','Moyen'),
         ('difficile','Difficile'),
     )
-    difficulty = models.CharField(max_length=30, choices=DIFFICULTY_CHOICES, default='simple')
+    difficultyLevel= models.CharField(max_length=30, choices=DIFFICULTY_CHOICES, default='simple')
     cost = models.DecimalField(max_digits=5, decimal_places=2, validators=[validators.MinValueValidator(0)])
     #images = FileField(upload_to='images/recettes')
     preparationTime = models.PositiveIntegerField(blank=True, null=True)
     cookTime = models.PositiveIntegerField(blank=True, null=True)
     restTime = models.PositiveIntegerField(blank=True, null=True)
+    creationDate = models.DateField(auto_now_add=True)
+    midificationDate = models.DateField(auto_now=True, default=creationDate)
 
     '''
     ingredientsListe = models.CharField(max_length=200)

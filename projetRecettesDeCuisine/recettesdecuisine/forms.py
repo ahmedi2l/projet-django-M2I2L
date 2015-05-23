@@ -23,10 +23,10 @@ class RegisterUserForm(forms.Form):
 class RecetteForm(forms.ModelForm):
     class Meta:
         model = Recette
-        # fields = ('title', 'type', 'difficulty', 'cost', 'preparationTime', 'cookTime', 'restTime')
+        fields = ('title', 'type', 'difficultyLevel', 'cost', 'preparationTime', 'cookTime', 'restTime',)
         labels = {
             'title': "Titre",
-            'difficulty': "Difficulté",
+            'difficultyLevel': "Niveau de difficulté",
             'cost': 'Coût',
             'preparationTime ': "Temps de préparation",
             'cookTime': "Temps de cuisson",
@@ -34,7 +34,6 @@ class RecetteForm(forms.ModelForm):
 
         }
         help_texts = {
-            'difficulty': "Niveau de difficulté de la recette",
             'cost': "€",
             'preparationTime': "min.",
             'cookTime': "min",
