@@ -8,15 +8,43 @@ from django.core.context_processors import csrf
 from recettesdecuisine.forms import RegisterUserForm
 
 from recettesdecuisine.models import Recette
+from django.views.generic.list import ListView
+from django.utils import timezone
+from django.views.generic.detail import DetailView
+
 # Create your views here.
 
-def index(request):
-    recettesList = Recette.objects.all().order_by('-creationDate')
 
-    contex = {
+
+# Generic view pour la liste de toutes les recettes
+class RecetteListView(ListView):
+    model = Recette
+
+    def get_context_data(self, **kwargs):
+        context = super(RecetteListView, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
+
+
+# Page d'accueil
+def index(request):
+    recettesList = Recette.objects.all()
+
+    context = {
         'recettesList': recettesList,
     }
-    return render(request, 'recettesdecuisine/index.html', contex)
+    return render(request, 'recettesdecuisine/index.html', context)
+
+
+# Affichge détaillé des récettes
+def recetteDetail(request, recette_id):
+    recette = Recette.objects.get(pk=recette_id)
+
+    context = {
+        'recette': recette,
+    }
+    return render(request, 'recettesdecuisine/recetteDetail.html', context)
+
 
 # Ajout d'une recette
 @login_required()
@@ -24,10 +52,10 @@ def addRecette(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
         form = RecetteForm(request.POST)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
-            try :
+            try:
                 form.save()
-                return render(request, 'recettesdecuisine/addRecette_success.html',)
-            except :
+                return render(request, 'recettesdecuisine/addRecette_success.html', )
+            except:
                 pass
     else:
         form = RecetteForm()
@@ -37,12 +65,14 @@ def addRecette(request):
     }
     return render(request, 'recettesdecuisine/addRecette.html', context)
 
+
 @login_required()
 def loggedin(request):
     context = {
         'username': request.user.username
     }
     return render_to_response('registration/loggedin.html', context)
+
 
 def logout(request):
     return render(request, 'registration/logged_out.html')
@@ -65,8 +95,10 @@ def registerUser(request):
 def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
+
 def addRecette_success(request):
     return render(request, 'recettesdecuisine/addRecette_success.html', )
+
 
 '''
 #Ancienne méthonde de création d'un utilisateur
