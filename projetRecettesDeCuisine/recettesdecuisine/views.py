@@ -28,7 +28,7 @@ class RecetteListView(ListView):
 
 # Page d'accueil
 def index(request):
-    recettesList = Recette.objects.all()
+    recettesList = Recette.objects.all().order_by('-id')[:5]
 
     context = {
         'recettesList': recettesList,
