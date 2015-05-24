@@ -12,9 +12,9 @@ from django.views.generic.list import ListView
 from django.utils import timezone
 from django.views.generic.detail import DetailView
 
+from django.contrib.auth.models import User
+
 # Create your views here.
-
-
 
 # Generic view pour la liste de toutes les recettes
 class RecetteListView(ListView):
@@ -53,6 +53,9 @@ def addRecette(request):
         form = RecetteForm(request.POST)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
             try:
+                # Remplissage automatique des champs owner_id et owner avant sauvegarde
+                form.instance.owner_id = request.user.id
+                form.instance.owner = request.user.username
                 form.save()
                 return render(request, 'recettesdecuisine/addRecette_success.html', )
             except:
@@ -64,6 +67,10 @@ def addRecette(request):
         'form': form,
     }
     return render(request, 'recettesdecuisine/addRecette.html', context)
+
+
+def addRecette_success(request):
+    return render(request, 'recettesdecuisine/addRecette_success.html', )
 
 
 @login_required()
@@ -96,10 +103,6 @@ def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
 
-def addRecette_success(request):
-    return render(request, 'recettesdecuisine/addRecette_success.html', )
-
-
 '''
 #Ancienne méthonde de création d'un utilisateur
 def registerUser(request):
@@ -124,3 +127,6 @@ def registerUser(request):
     }
     return render(request, 'registration/registerUser.html', context)
 '''
+
+# def userRecette(request) :
+# pass

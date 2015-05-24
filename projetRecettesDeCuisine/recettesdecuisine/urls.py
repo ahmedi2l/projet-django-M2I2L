@@ -14,4 +14,6 @@ urlpatterns = patterns('',
 
                        url(r'^recetteList$', views.RecetteListView.as_view(), name='recetteList'),
                        url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recetteDetail, name='recetteDetail'),
+
+                       #url(r'^userRecettes/$', views.userRecettes, name='userRecettes'),
                        )
