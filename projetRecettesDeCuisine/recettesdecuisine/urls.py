@@ -13,5 +13,5 @@ urlpatterns = patterns('',
                        url(r'^addRecette_success/$', views.addRecette_success, name='addRecette_success'),
 
                        url(r'^recetteList$', views.RecetteListView.as_view(), name='recetteList'),
-                       url(r'^detail/(?P<recette_id>\d+)/$', views.recetteDetail, name='detail'),
+                       url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recetteDetail, name='recetteDetail'),
                        )

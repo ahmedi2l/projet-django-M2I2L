@@ -6,7 +6,7 @@
 
     <ul>
         {% for recette in object_list %}
-            <li><a href={% url 'recettesdecuisine:detail' recette.id %}> {{ recette.title }} </a></li>
+            <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
         {% empty %}
             <li>Il n'ya aucune recette pour l'instant.</li>
         {% endfor %}
