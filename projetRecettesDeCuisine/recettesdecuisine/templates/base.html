@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 </head>
 <body>
+<p style="text-align: right">{{ loggedUserMessage|default:"Vous n'êtes pas connecté" }}</p>
 
 {% block content %} {%endblock%}
 
