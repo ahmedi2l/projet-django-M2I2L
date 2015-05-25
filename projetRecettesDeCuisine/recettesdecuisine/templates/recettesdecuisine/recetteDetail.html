@@ -1,9 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <ul>
-    <li> Titre : {{ recette.title }}</li>
-    <li> Coût : {{ recette.cost }} €</li>
-    </ul>
 
+    <h1> {{ recette.title }}</h1>
+
+    <table border="1">
+        <th colspan="2"> {{ recette.title }} </th>
+        <tr>
+            <td> Type</td>
+            <td>{{ recette.type }}</td>
+        </tr>
+        <tr>
+            <td> Niveau de difficulté</td>
+            <td> {{ recette.difficultyLevel }}</td>
+        </tr>
+        <tr>
+            <td> Coût</td>
+            <td> {{ recette.cost }} €</td>
+        </tr>
+        <tr>
+            <td> Temps de préparation</td>
+            <td> {{ recette.preparationTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Temps de cuisson</td>
+            <td> {{ recette.cookTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Temps de repos</td>
+            <td> {{ recette.restTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Auteur</td>
+            <td> {{ recette.owner }}</td>
+        </tr>
+        <tr>
+            <td> Date de mise en ligne</td>
+            <td> {{ recette.creationDate }}</td>
+        </tr>
+        <tr>
+            <td> Date de modification</td>
+            <td> {{ recette.modificationDate }}</td>
+        </tr>
+
+
+    </table>
 {% endblock %}
