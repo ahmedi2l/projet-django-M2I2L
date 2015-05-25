@@ -19,7 +19,8 @@ class Recette(models.Model):
         ('moyen', 'Moyen'),
         ('difficile', 'Difficile'),
     )
-    difficultyLevel = models.CharField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES, default='simple')
+    difficultyLevel = models.CharField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
+                                       default='simple')
     cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2, validators=[validators.MinValueValidator(0)])
     # images = FileField(upload_to='images/recettes')
     preparationTime = models.PositiveIntegerField("Temps de préparation (min.)", blank=True, null=True)
@@ -28,7 +29,7 @@ class Recette(models.Model):
     creationDate = models.DateTimeField("Date de création", auto_now_add=True)
     modificationDate = models.DateTimeField("Date de modification", auto_now=True, default=creationDate)
     ownerId = models.PositiveIntegerField("Id de l'auteur", blank=True)
-    owner = models.ForeignKey(User, blank=True,null=True)
+    owner = models.ForeignKey(User, blank=True, null=True)
 
     '''
     ingredientsListe = models.CharField(max_length=200)
@@ -39,3 +40,19 @@ class Recette(models.Model):
 
     def __str__(self):  # __unicode__ on Python 2
         return self.title
+
+
+class Note(models.Model):
+    recette = models.ForeignKey(Recette)
+    notes = models.IntegerField(default=0)
+
+    def __str__(self):  # __unicode__ on Python 2
+        return self.notes
+
+
+class Commentaire(models.Model):
+    recette = models.ForeignKey(Recette)
+    commentaires = models.TextField(max_length=200)
+
+    def __str__(self):  # __unicode__ on Python 2
+        return self.commentaires
