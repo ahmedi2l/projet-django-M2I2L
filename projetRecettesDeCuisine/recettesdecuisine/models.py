@@ -26,7 +26,7 @@ class Recette(models.Model):
     cookTime = models.PositiveIntegerField(blank=True, null=True)
     restTime = models.PositiveIntegerField(blank=True, null=True)
     creationDate = models.DateField(auto_now_add=True)
-    midificationDate = models.DateField(auto_now=True, default=creationDate)
+    modificationDate = models.DateField(auto_now=True, default=creationDate)
     owner_id = models.PositiveIntegerField(blank=True)
     #owner = models.ForeignKey(User, blank=True,null=True)
     owner = models.CharField(max_length=200, blank=True)
