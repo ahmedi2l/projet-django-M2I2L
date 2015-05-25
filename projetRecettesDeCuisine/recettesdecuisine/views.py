@@ -28,10 +28,17 @@ class RecetteListView(ListView):
 
 # Page d'accueil
 def index(request):
+    # Affichage des 5 dernières recettes en page d'accueil
     recettesList = Recette.objects.all().order_by('-id')[:5]
+    username = request.user.username
+    if username =="" :
+        loginMessage = ""
+    else:
+        loginMessage = "Bonjour "+username
 
     context = {
         'recettesList': recettesList,
+        'loginMessage': loginMessage
     }
     return render(request, 'recettesdecuisine/index.html', context)
 
@@ -53,9 +60,9 @@ def addRecette(request):
         form = RecetteForm(request.POST)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
             try:
-                # Remplissage automatique des champs owner_id et owner avant sauvegarde
-                form.instance.owner_id = request.user.id
-                form.instance.owner = request.user.username
+                # Remplissage automatique des champs owner et ownerId avant sauvegarde
+                form.instance.owner = request.user
+                form.instance.ownerId = request.user.id
                 form.save()
                 return render(request, 'recettesdecuisine/addRecette_success.html', )
             except:
@@ -128,5 +135,3 @@ def registerUser(request):
     return render(request, 'registration/registerUser.html', context)
 '''
 
-# def userRecette(request) :
-# pass
