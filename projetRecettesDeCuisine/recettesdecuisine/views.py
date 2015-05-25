@@ -25,20 +25,21 @@ class RecetteListView(ListView):
         context['now'] = timezone.now()
         return context
 
+def loggedUserMessage(request) :
+    username = request.user.username
+    if username =="" :
+        return None
+    else:
+        return "Bonjour "+username
 
 # Page d'accueil
 def index(request):
     # Affichage des 5 dernières recettes en page d'accueil
     recettesList = Recette.objects.all().order_by('-id')[:5]
-    username = request.user.username
-    if username =="" :
-        loginMessage = ""
-    else:
-        loginMessage = "Bonjour "+username
 
     context = {
         'recettesList': recettesList,
-        'loginMessage': loginMessage
+        'loggedUserMessage': loggedUserMessage(request)
     }
     return render(request, 'recettesdecuisine/index.html', context)
 
