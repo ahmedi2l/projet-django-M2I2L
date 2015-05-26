@@ -4,12 +4,15 @@
 
     <h1 style="text-align: center"> Liste des recettes </h1>
 
-    <ul>
-        {% for recette in object_list %}
-            <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
-        {% empty %}
-            <li>Il n'ya aucune recette pour l'instant.</li>
-        {% endfor %}
-    </ul>
+    <fieldset style="width: 300px;">
+        <legend> Toues les recettes :</legend>
+        <ul>
+            {% for recette in object_list %}
+                <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
+            {% empty %}
+                <li>Il y a actuellement aucune recette.</li>
+            {% endfor %}
+        </ul>
+    </fieldset>
 
 {% endblock %}

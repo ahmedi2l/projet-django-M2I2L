@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} | Site de recettes de cuisine {% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'recettesdecuisine:index' %}"> Recettes de cuisine </a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

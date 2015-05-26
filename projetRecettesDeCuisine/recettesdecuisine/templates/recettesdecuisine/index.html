@@ -1,16 +1,16 @@
-{% extends 'base.html' %}
+{% extends "base_site.html" %}
 
 {% block content %}
 
-    <h1 style="text-align: center"> Recettes de cuisine </h1>
+    <h1 style="text-align: center"> Bienvenue sur recettedecuisine.fr ! </h1>
 
+    <fieldset style="width: 300px;">
+        <legend> Dérnières recettes ajoutées </legend>
     <ul>
     {% for recette in recettesList %}
          <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
     {% endfor %}
     </ul>
-
-    <p style="text-align: center"> <a href={% url 'recettesdecuisine:loggedin' %}> Se connecter </a> </p>
-    <p style="text-align: center"> <a href={% url 'recettesdecuisine:registerUser' %}> Créer un compte </a> </p>
+    </fieldset>
 
 {% endblock %}

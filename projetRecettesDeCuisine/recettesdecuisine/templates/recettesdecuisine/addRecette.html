@@ -9,10 +9,13 @@
     {% endif %}
 
     <form method="post" action="{% url 'recettesdecuisine:addRecette' %}">
+        <fieldset>
+            <legend> Informations sur la recettes :</legend>
         {% csrf_token %}
 
         {{ form.as_p }}
         <input type="submit" value="Sauvegarder">
+        </fieldset>
     </form>
 
 {% endblock %}

@@ -4,8 +4,9 @@
 
     <h1> {{ recette.title }}</h1>
 
-    <table border="1">
-        <th colspan="2"> {{ recette.title }} </th>
+    <div style="">
+    <table border="2">
+        <th colspan="2" style="text-align: center;"> Recette </th>
         <tr>
             <td> Type</td>
             <td>{{ recette.type }}</td>
@@ -43,6 +44,6 @@
             <td> {{ recette.modificationDate }}</td>
         </tr>
 
-
     </table>
+    </div>
 {% endblock %}
