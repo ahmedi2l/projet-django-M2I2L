@@ -16,12 +16,17 @@
     </form>
 
     <ul>
-    {% for recette in  queryResult %}
-        <li> {{ recette.title }}</li>
-    {% empty %}
-        <li> Aucun résultat trouvé.</li>
-    {% endfor %}
-    </ul>
 
+        {% if queryResult != "noRequest" %}
+            {% for recette in  queryResult %}
+                <li> {{ recette.title }}</li>
+            {% empty %}
+
+                <li> Aucun résultat trouvé.</li>
+
+            {% endfor %}
+        {% endif %}
+
+    </ul>
 
 {% endblock %}

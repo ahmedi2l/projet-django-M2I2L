@@ -116,15 +116,15 @@ def registerUser_success(request):
 def recetteSearch(request):
     if request.method == 'GET':
         form = RecetteSearchForm(request.GET)
-        if form.is_valid():
-                queryResult = Recette.objects.filter(title__icontains=form.cleaned_data['title'])
-                return render(request, "recettesdecuisine/recetteSearch.html", {
-                    'form': form,
-                    'queryResult': queryResult,
-                })
+        if form.is_valid() and request.GET:
+            queryResult = Recette.objects.filter(title__icontains=form.cleaned_data['title'])
+            return render(request, "recettesdecuisine/recetteSearch.html", {
+                'form': form,
+                'queryResult': queryResult,
+            })
     else:
         form = RecetteSearchForm()
-    return render(request, "recettesdecuisine/recetteSearch.html", {'form': form,})
+    return render(request, "recettesdecuisine/recetteSearch.html", {'form': form, 'queryResult': "noRequest", })
 
 
 '''
