@@ -5,7 +5,7 @@ from .forms import RecetteForm
 
 from django.contrib import auth
 from django.core.context_processors import csrf
-from recettesdecuisine.forms import RegisterUserForm
+from recettesdecuisine.forms import RegisterUserForm, RecetteSearchForm
 
 from recettesdecuisine.models import Recette
 from django.views.generic.list import ListView
@@ -25,12 +25,14 @@ class RecetteListView(ListView):
         context['now'] = timezone.now()
         return context
 
-def loggedUserMessage(request) :
+
+def loggedUserMessage(request):
     username = request.user.username
-    if username =="" :
+    if username == "":
         return None
     else:
-        return "Bonjour "+username
+        return "Bonjour " + username
+
 
 # Page d'accueil
 def index(request):
@@ -109,6 +111,20 @@ def registerUser(request):
 
 def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
+
+
+def recetteSearch(request):
+    if request.method == 'GET':
+        form = RecetteSearchForm(request.GET)
+        if form.is_valid():
+                queryResult = Recette.objects.filter(title__icontains=form.cleaned_data['title'])
+                return render(request, "recettesdecuisine/recetteSearch.html", {
+                    'form': form,
+                    'queryResult': queryResult,
+                })
+    else:
+        form = RecetteSearchForm()
+    return render(request, "recettesdecuisine/recetteSearch.html", {'form': form,})
 
 
 '''
