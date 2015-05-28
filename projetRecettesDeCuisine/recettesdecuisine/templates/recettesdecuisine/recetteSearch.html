@@ -1,0 +1,27 @@
+{% extends "base_site.html" %}
+
+{% block content %}
+
+    <h1 style="text-align: center"> Recherche </h1>
+
+    <form action="{% url 'recettesdecuisine:recetteSearch' %}" method="GET">
+        <fieldset>
+            <legend> Rechercher une recette :</legend>
+            {% comment %}
+            {% csrf_token %}
+            {% endcomment %}
+            {{ form.as_p }}
+            <input type="submit" value="Rechercher"/>
+        </fieldset>
+    </form>
+
+    <ul>
+    {% for recette in  queryResult %}
+        <li> {{ recette.title }}</li>
+    {% empty %}
+        <li> Aucun résultat trouvé.</li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}
