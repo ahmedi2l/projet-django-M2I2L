@@ -48,3 +48,5 @@ class RecetteForm(forms.ModelForm):
             'restTime': "min",
         }
 
+class RecetteSearchForm(forms.Form):
+    title = forms.CharField(label='Titre', max_length=200, required=False)
