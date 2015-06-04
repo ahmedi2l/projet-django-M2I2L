@@ -1,12 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_site.html" %}
 
 {% block content %}
 
-    <h1> Bonjour {{username}}, vous êtes maintenant logué </h1>
+    <h1 style="text-align: center"> Bonjour {{username}}, vous êtes maintenant connecté! </h1>
 
-    {% comment %}
-     <p style="text-align: center;"> <a href={% url 'logout' %}> Déconnexion</a> </p>
-    {% endcomment %}
-     <p style="text-align: center;"><a href="/accounts/logout/?next=/index/">Déconnexion</a></p>
+
 
 {% endblock %}

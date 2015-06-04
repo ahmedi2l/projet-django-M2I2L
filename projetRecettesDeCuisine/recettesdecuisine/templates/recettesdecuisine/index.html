@@ -4,13 +4,14 @@
 
     <h1 style="text-align: center"> Bienvenue sur recettedecuisine.fr ! </h1>
 
+
     <fieldset style="width: 300px;">
-        <legend> Dérnières recettes ajoutées </legend>
-    <ul>
-    {% for recette in recettesList %}
-         <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
-    {% endfor %}
-    </ul>
+        <legend> Dérnières recettes ajoutées</legend>
+        <ul>
+            {% for recette in recettesList %}
+                <li><a href={% url 'recettesdecuisine:recetteDetail' recette.id %}> {{ recette.title }} </a></li>
+            {% endfor %}
+        </ul>
     </fieldset>
 
 {% endblock %}

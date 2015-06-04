@@ -41,7 +41,6 @@ def index(request):
 
     context = {
         'recettesList': recettesList,
-        'loggedUserMessage': loggedUserMessage(request)
     }
     return render(request, 'recettesdecuisine/index.html', context)
 
@@ -86,7 +85,7 @@ def addRecette_success(request):
 @login_required()
 def loggedin(request):
     context = {
-        'username': request.user.username
+        'user': request.user,
     }
     return render_to_response('registration/loggedin.html', context)
 
