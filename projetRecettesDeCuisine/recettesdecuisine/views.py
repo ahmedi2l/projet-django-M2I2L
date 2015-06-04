@@ -4,15 +4,11 @@ from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm
 
 from django.contrib import auth
-from django.core.context_processors import csrf
 from recettesdecuisine.forms import RegisterUserForm, RecetteSearchForm
 
 from recettesdecuisine.models import Recette
 from django.views.generic.list import ListView
 from django.utils import timezone
-from django.views.generic.detail import DetailView
-
-from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -91,7 +87,8 @@ def loggedin(request):
 
 
 def logout(request):
-    return render(request, 'registration/logged_out.html')
+    auth.logout(request)
+    return render(request, 'registration/loggedout.html',)
 
 
 # Création d'un compte utilisateur
