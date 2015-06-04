@@ -52,18 +52,23 @@
         <!-- END Header -->
         {% block breadcrumbs %}
             <div class="breadcrumbs">
-                <a href="{% url 'recettesdecuisine:index' %}">{% trans 'Home' %}</a>
+                <a href="{% url 'recettesdecuisine:index' %}">{% trans 'Home' %}</a> /
                 {% if title %} &rsaquo; {{ title }}{% endif %}
 
                 {% if user.is_authenticated %}
-                    Bonjour {{ user.username }}
+                    Bonjour {{ user.username }} /
                     <a href="{% url 'recettesdecuisine:logout' %}"> Se déconnecter </a>
                 {% else %}
                     <a href="{% url 'recettesdecuisine:loggedin' %}"> Se connecter </a>
                 {% endif %}
 
+                <!-- recetteSearch -->
+                {% block recetteSearch %}
+                    {% include "recettesdecuisine/recetteSearch.html" %}
+                {% endblock %}
 
             </div>
+
         {% endblock %}
     {% endif %}
 
@@ -74,6 +79,7 @@
             {% endfor %}</ul>
         {% endif %}
     {% endblock messages %}
+
 
     <!-- Content -->
     <div id="content" class="{% block coltype %}colM{% endblock %}">

@@ -1,32 +1,11 @@
-{% extends "base_site.html" %}
-
-{% block content %}
-
-    <h1 style="text-align: center"> Recherche </h1>
-
-    <form action="{% url 'recettesdecuisine:recetteSearch' %}" method="GET">
-        <fieldset>
-            <legend> Rechercher une recette :</legend>
-            {% comment %}
+<form action="{% url 'recettesdecuisine:recetteSearch' %}" method="GET">
+    <fieldset>
+        <legend> Rechercher une recette :</legend>
+        {% comment %}
             {% csrf_token %}
-            {% endcomment %}
             {{ form.as_p }}
-            <input type="submit" value="Rechercher"/>
-        </fieldset>
-    </form>
-
-    <ul>
-
-        {% if queryResult != "noRequest" %}
-            {% for recette in  queryResult %}
-                <li> {{ recette.title }}</li>
-            {% empty %}
-
-                <li> Aucun résultat trouvé.</li>
-
-            {% endfor %}
-        {% endif %}
-
-    </ul>
-
-{% endblock %}
+            {% endcomment %}
+        <input type="text" name="title" id="title" value=""/>
+        <input type="submit" value="Rechercher"/>
+    </fieldset>
+</form>

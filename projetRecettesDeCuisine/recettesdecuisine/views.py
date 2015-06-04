@@ -113,15 +113,20 @@ def recetteSearch(request):
     if request.method == 'GET':
         form = RecetteSearchForm(request.GET)
         if form.is_valid() and request.GET:
-            queryResult = Recette.objects.filter(title__icontains=form.cleaned_data['title'])
-            return render(request, "recettesdecuisine/recetteSearch.html", {
+            queryTitle = form.cleaned_data['title']
+            queryResult = Recette.objects.filter(title__icontains=queryTitle)
+            return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,
                 'queryResult': queryResult,
+                'queryTitle': queryTitle,
             })
     else:
         form = RecetteSearchForm()
-    return render(request, "recettesdecuisine/recetteSearch.html", {'form': form, 'queryResult': "noRequest", })
+    return render(request, "recettesdecuisine/searchResult.html", {'form': form, 'queryResult': "noRequest", })
 
+# Résultat des recherches
+def searchResult(request):
+    return render(request, "recettesdecuisine/searchResult.html",)
 
 '''
 #Ancienne méthonde de création d'un utilisateur
