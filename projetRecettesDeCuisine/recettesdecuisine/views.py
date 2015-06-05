@@ -4,21 +4,23 @@ from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm
 
 from django.contrib import auth
-from recettesdecuisine.forms import RegisterUserForm, RecetteSearchForm
+from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm
 
 from recettesdecuisine.models import Recette
-from django.views.generic.list import ListView
+from django.views import generic
 from django.utils import timezone
 
 # Create your views here.
 
 # Generic view pour la liste de toutes les recettes
-class RecetteListView(ListView):
+class RecetteListView(generic.ListView):
     model = Recette
 
     def get_context_data(self, **kwargs):
+        form = RecipeSearchForm()
         context = super(RecetteListView, self).get_context_data(**kwargs)
         context['now'] = timezone.now()
+        context['form'] = form
         return context
 
 
@@ -34,15 +36,17 @@ def loggedUserMessage(request):
 def index(request):
     # Affichage des 5 dernières recettes en page d'accueil
     recettesList = Recette.objects.all().order_by('-id')[:5]
+    form = RecipeSearchForm()
 
     context = {
         'recettesList': recettesList,
+        'form': form,
     }
     return render(request, 'recettesdecuisine/index.html', context)
 
 
 # Affichge détaillé des récettes
-def recetteDetail(request, recette_id):
+def recipeDetail(request, recette_id):
     recette = Recette.objects.get(pk=recette_id)
 
     context = {
@@ -109,9 +113,9 @@ def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
 
-def recetteSearch(request):
+def recipeSearch(request):
     if request.method == 'GET':
-        form = RecetteSearchForm(request.GET)
+        form = RecipeSearchForm(request.GET)
         if form.is_valid() and request.GET:
             queryTitle = form.cleaned_data['title']
             queryResult = Recette.objects.filter(title__icontains=queryTitle)
@@ -121,7 +125,7 @@ def recetteSearch(request):
                 'queryTitle': queryTitle,
             })
     else:
-        form = RecetteSearchForm()
+        form = RecipeSearchForm()
     return render(request, "recettesdecuisine/searchResult.html", {'form': form, 'queryResult': "noRequest", })
 
 # Résultat des recherches

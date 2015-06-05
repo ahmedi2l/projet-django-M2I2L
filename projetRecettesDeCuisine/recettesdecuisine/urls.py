@@ -15,8 +15,8 @@ urlpatterns = patterns('',
                        url(r'^addRecette_success/$', views.addRecette_success, name='addRecette_success'),
 
                        url(r'^recetteList$', views.RecetteListView.as_view(), name='recetteList'),
-                       url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recetteDetail, name='recetteDetail'),
+                       url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recipeDetail, name='recipeDetail'),
 
-                       url(r'^recetteSearch/$', views.recetteSearch, name='recetteSearch'),
+                       url(r'^recipeSearch/$', views.recipeSearch, name='recipeSearch'),
                        url(r'^searchResult/$', views.searchResult, name='searchResult'),
                        )

@@ -13,7 +13,7 @@ class Recette(models.Model):
         ('platPrincipal', 'Plat principal'),
         ('dessert', 'Dessert'),
     )
-    type = models.CharField("Type", max_length=30, choices=TYPE_CHOICES, default='platPrincipal')
+    type = models.CharField("Type", max_length=30, choices=TYPE_CHOICES, default='platPrincipal', editable=True)
     DIFFICULTY_CHOICES = (
         ('simple', 'Simple'),
         ('moyen', 'Moyen'),
@@ -30,6 +30,8 @@ class Recette(models.Model):
     modificationDate = models.DateTimeField("Date de modification", auto_now=True, default=creationDate)
     ownerId = models.PositiveIntegerField("Id de l'auteur", blank=True)
     owner = models.ForeignKey(User, blank=True, null=True)
+    note2 = models.ManyToManyField("Note2", null=True, blank=True, verbose_name=u"Notes2", )
+
 
     '''
     ingredientsListe = models.CharField(max_length=200)
@@ -44,10 +46,22 @@ class Recette(models.Model):
 
 class Note(models.Model):
     recette = models.ForeignKey(Recette)
-    notes = models.IntegerField(default=0)
+    notes = models.PositiveIntegerField(default=0)
 
     def __str__(self):  # __unicode__ on Python 2
         return self.notes
+
+class Note2(models.Model):
+     class Meta:
+         verbose_name="Note2"
+         verbose_name_plural="Notes2"
+     note2 = models.PositiveIntegerField(u"Note2", blank=True, null=True)
+     def __unicode__(self):
+         return self.note2
+
+
+
+
 
 
 class Commentaire(models.Model):

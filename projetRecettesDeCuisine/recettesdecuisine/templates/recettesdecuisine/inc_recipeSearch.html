@@ -1,11 +1,11 @@
-<form action="{% url 'recettesdecuisine:recetteSearch' %}" method="GET">
+<form action="{% url 'recettesdecuisine:recipeSearch' %}" method="GET">
     <fieldset>
         <legend> Rechercher une recette :</legend>
         {% comment %}
             {% csrf_token %}
-            {{ form.as_p }}
+             <input type="text" name="title" id="title" value=""/>
             {% endcomment %}
-        <input type="text" name="title" id="title" value=""/>
+        {{ form.as_p }}
         <input type="submit" value="Rechercher"/>
     </fieldset>
 </form>
