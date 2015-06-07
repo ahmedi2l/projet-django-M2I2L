@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from recettesdecuisine.models import Recette, Note
+from recettesdecuisine.models import Recette, Choice
 
 # Register your models here.
 
 class NoteInline(admin.TabularInline):
-    model = Note
-    extra = 3
+    model = Choice
+    extra = 1
 
 class RecetteAdmin(admin.ModelAdmin):
     fieldsets = [

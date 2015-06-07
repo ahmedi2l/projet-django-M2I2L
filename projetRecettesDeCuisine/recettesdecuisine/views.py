@@ -1,14 +1,16 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm
 
 from django.contrib import auth
-from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm
+from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm, RecipeNoteForm
 
-from recettesdecuisine.models import Recette
+from recettesdecuisine.models import Recette, Choice
 from django.views import generic
 from django.utils import timezone
+from django.core.urlresolvers import reverse
+from django.http import Http404
 
 # Create your views here.
 
@@ -61,14 +63,11 @@ def addRecette(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
         form = RecetteForm(request.POST)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
-            try:
-                # Remplissage automatique des champs owner et ownerId avant sauvegarde
-                form.instance.owner = request.user
-                form.instance.ownerId = request.user.id
-                form.save()
-                return render(request, 'recettesdecuisine/addRecette_success.html', )
-            except:
-                pass
+            # Remplissage automatique des champs owner et ownerId avant sauvegarde
+            form.instance.owner = request.user
+            form.instance.ownerId = request.user.id
+            form.save()
+            return render(request, 'recettesdecuisine/addRecette_success.html', )
     else:
         form = RecetteForm()
 
@@ -132,28 +131,54 @@ def recipeSearch(request):
 def searchResult(request):
     return render(request, "recettesdecuisine/searchResult.html",)
 
-'''
-#Ancienne méthonde de création d'un utilisateur
-def registerUser(request):
-    if request.method == "POST":
-        form = RegisterUserForm(request.POST)
+#
+class DetailView(generic.DetailView):
+    model = Recette
+    template_name = 'recettesdecuisine/detail.html'
 
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            email = form.cleaned_data['email']
+    def get_context_data(self, **kwargs):
+        form = RecipeNoteForm()
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context['form'] = form
+        return context
 
-            try:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                return render(request, 'registration/registerUser_success.html', {'username': username, 'message': u"Le compte a été crée"})
-            except :
-                return render(request, 'registration/registerUser_success.html', {'username': username, 'message': u"Le compte n'a pas pu être créé"})
+
+class ResultsView(generic.DetailView):
+    model = Recette
+    template_name = 'recettesdecuisine/results.html'
+
+#
+def vote(request, recette_id):
+    p = get_object_or_404(Recette, pk=recette_id)
+    try:
+        selected_choice = p.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'recettesdecuisine/detail.html', {
+            'recette': p,
+            'error_message': "Vous avez sélectionner aucune note!",
+        })
     else:
-        form = RegisterUserForm()
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('recettesdecuisine:results', args=(p.id,)))
+
+
+def addNote(request) :
+    if request.method == 'POST':  # S'il s'agit d'une requête POST
+        form = RecipeNoteForm(request.POST)  # Nous reprenons les données
+        if form.is_valid():  # Nous vérifions que les données envoyées sont valides
+            # Remplissage automatique des champs owner et ownerId avant sauvegarde
+            #form.instance.owner = request.user
+            form.save()
+            return render(request, 'recettesdecuisine/addNote.html', )
+    else:
+        form = RecipeNoteForm()
 
     context = {
         'form': form,
     }
-    return render(request, 'registration/registerUser.html', context)
-'''
-
+    return render(request, 'recettesdecuisine/addNote.html', context)

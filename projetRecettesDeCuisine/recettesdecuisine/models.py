@@ -21,7 +21,8 @@ class Recette(models.Model):
     )
     difficultyLevel = models.CharField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
                                        default='simple')
-    cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2, validators=[validators.MinValueValidator(0)])
+    cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2,
+                               validators=[validators.MinValueValidator(0)], blank= True, null=True)
     # images = FileField(upload_to='images/recettes')
     preparationTime = models.PositiveIntegerField("Temps de préparation (min.)", blank=True, null=True)
     cookTime = models.PositiveIntegerField("Temps de cuisson (min.)", blank=True, null=True)
@@ -30,7 +31,6 @@ class Recette(models.Model):
     modificationDate = models.DateTimeField("Date de modification", auto_now=True, default=creationDate)
     ownerId = models.PositiveIntegerField("Id de l'auteur", blank=True)
     owner = models.ForeignKey(User, blank=True, null=True)
-    note2 = models.ManyToManyField("Note2", null=True, blank=True, verbose_name=u"Notes2", )
 
 
     '''
@@ -44,29 +44,12 @@ class Recette(models.Model):
         return self.title
 
 
-class Note(models.Model):
+class Choice(models.Model):
     recette = models.ForeignKey(Recette)
-    notes = models.PositiveIntegerField(default=0)
+    #comment = models.TextField("Commentaire", max_length=200, blank=True, null=True)
+    NOTES_CHOICES = [(i, i) for i in range(11)]
+    note = models.PositiveIntegerField("Note", choices=NOTES_CHOICES)
+    votes = models.IntegerField(default=0)
 
-    def __str__(self):  # __unicode__ on Python 2
-        return self.notes
-
-class Note2(models.Model):
-     class Meta:
-         verbose_name="Note2"
-         verbose_name_plural="Notes2"
-     note2 = models.PositiveIntegerField(u"Note2", blank=True, null=True)
-     def __unicode__(self):
-         return self.note2
-
-
-
-
-
-
-class Commentaire(models.Model):
-    recette = models.ForeignKey(Recette)
-    commentaires = models.TextField(max_length=200)
-
-    def __str__(self):  # __unicode__ on Python 2
-        return self.commentaires
+    def __int__(self):  # __unicode__ on Python 2
+        return self.note
