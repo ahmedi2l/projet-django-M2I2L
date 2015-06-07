@@ -13,6 +13,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             {% endcomment %}
+        <input type="hidden" name="title" id="title" value="{{ queryTitle }}"/>
         {{ form.titleOrder.label }}
         {{ form.titleOrder }}
 
