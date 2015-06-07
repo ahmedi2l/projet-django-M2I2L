@@ -61,7 +61,7 @@ def recipeDetail(request, recette_id):
 @login_required()
 def addRecette(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
-        form = RecetteForm(request.POST)  # Nous reprenons les données
+        form = RecetteForm(request.POST, request.FILES)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
             # Remplissage automatique des champs owner et ownerId avant sauvegarde
             form.instance.owner = request.user
@@ -131,7 +131,7 @@ def recipeSearch(request):
 def searchResult(request):
     return render(request, "recettesdecuisine/searchResult.html",)
 
-#
+
 class DetailView(generic.DetailView):
     model = Recette
     template_name = 'recettesdecuisine/detail.html'
@@ -147,7 +147,7 @@ class ResultsView(generic.DetailView):
     model = Recette
     template_name = 'recettesdecuisine/results.html'
 
-#
+@login_required()
 def vote(request, recette_id):
     p = get_object_or_404(Recette, pk=recette_id)
     try:
@@ -166,7 +166,7 @@ def vote(request, recette_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('recettesdecuisine:results', args=(p.id,)))
 
-
+@login_required()
 def addNote(request) :
     if request.method == 'POST':  # S'il s'agit d'une requête POST
         form = RecipeNoteForm(request.POST)  # Nous reprenons les données

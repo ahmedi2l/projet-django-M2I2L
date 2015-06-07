@@ -23,7 +23,7 @@ class Recette(models.Model):
                                        default='simple')
     cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2,
                                validators=[validators.MinValueValidator(0)], blank= True, null=True)
-    # images = FileField(upload_to='images/recettes')
+    images = models.ImageField(upload_to="images")
     preparationTime = models.PositiveIntegerField("Temps de préparation (min.)", blank=True, null=True)
     cookTime = models.PositiveIntegerField("Temps de cuisson (min.)", blank=True, null=True)
     restTime = models.PositiveIntegerField("Temps de repos (min.)", blank=True, null=True)

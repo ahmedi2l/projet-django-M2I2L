@@ -17,21 +17,11 @@ class RegisterUserForm(UserCreationForm):
         self.fields['username'].help_text = ""
         self.fields['password2'].help_text = ""
 
-
-'''
-#Ancien formulaire de création d'un utilisateur
-class RegisterUserForm(forms.Form):
-    username = forms.CharField(label=u'Login', max_length=100)
-    password = forms.CharField(label=u'Mot de passe', max_length=100, widget=forms.PasswordInput)
-    email = forms.EmailField(label=u'Courriel')
-'''
-
-
 class RecetteForm(forms.ModelForm):
     class Meta:
         model = Recette
         fields = ('title', 'type', 'difficultyLevel', 'cost', 'preparationTime',
-                  'cookTime', 'restTime', )
+                  'cookTime', 'restTime', 'images')
         labels = {
             'title': "Titre",
             'difficultyLevel': "Niveau de difficulté",
