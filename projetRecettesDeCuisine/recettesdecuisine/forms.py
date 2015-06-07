@@ -40,6 +40,19 @@ class RecetteForm(forms.ModelForm):
 
 class RecipeSearchForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False)
+    ORDER_CHOICES = (
+        (1, u'Croissant'),
+        (2, u'Décroissant'),
+    )
+    titleOrder = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Titre', required=False)
+    DIFFICULTY_CHOICES = (
+        (1, u'Simple'),
+        (2, u'Moyen'),
+        (3, u'Difficile'),
+    )
+    difficultyLevel = forms.ChoiceField(choices=DIFFICULTY_CHOICES, label=u"Difficulté de préparation", required=False)
+    preparationTime = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Temps de préparation')
+    note = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Note Moyenne')
 
 
 class RecipeNoteForm(forms.ModelForm) :

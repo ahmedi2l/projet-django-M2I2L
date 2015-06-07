@@ -10,7 +10,8 @@ from recettesdecuisine.models import Recette, Choice
 from django.views import generic
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -117,6 +118,11 @@ def recipeSearch(request):
         form = RecipeSearchForm(request.GET)
         if form.is_valid() and request.GET:
             queryTitle = form.cleaned_data['title']
+            queryByDifficultyLevel = form.cleaned_data['difficultyLevel']
+            queryByTitleOrder = form.cleaned_data['titleOrder']
+            queryByNote = form.cleaned_data['note']
+            queryByPreparationTime = form.cleaned_data['preparationTime']
+
             queryResult = Recette.objects.filter(title__icontains=queryTitle)
             return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,

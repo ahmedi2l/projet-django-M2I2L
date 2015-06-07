@@ -13,7 +13,17 @@
             {% csrf_token %}
             {{ form.as_p }}
             {% endcomment %}
-        {{ form }}
+        {{ form.titleOrder.label }}
+        {{ form.titleOrder }}
+
+        {{ form.difficultyLevel.label }}
+        {{ form.difficultyLevel }}
+
+        {{ form.preparationTime.label }}
+        {{ form.preparationTime }}
+
+        {{ form.note.label }}
+        {{ form.note }}
         <input type="submit" value="Filtrer"/>
     </form>
 
