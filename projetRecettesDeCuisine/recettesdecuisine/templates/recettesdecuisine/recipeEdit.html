@@ -1,0 +1,73 @@
+{% extends 'base_site.html' %}
+
+{% block content %}
+
+
+        <h1> Edition de la recette </h1>
+
+    {% if form.errors %}
+        <p style="color: red;"> Veuillez corrigez l'erreur ci-dessous :</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'recettesdecuisine:addRecette' %}" enctype="multipart/form-data">
+        <fieldset>
+            <legend> Informations sur la recettes :</legend>
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <input type="submit" value="Sauvegarder">
+        </fieldset>
+    </form>
+
+
+
+
+    <h1> {{ recette.title }}</h1>
+
+    <div style="">
+    <table border="2">
+        <th colspan="2" style="text-align: center;"> Recette </th>
+        <tr>
+            <td> Type</td>
+            <td>{{ recette.type }}</td>
+        </tr>
+        <tr>
+            <td> Niveau de difficulté</td>
+            <td> {{ recette.difficultyLevel }}</td>
+        </tr>
+        <tr>
+            <td> Coût</td>
+            <td> {{ recette.cost }} €</td>
+        </tr>
+        <tr>
+            <td> Temps de préparation</td>
+            <td> {{ recette.preparationTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Temps de cuisson</td>
+            <td> {{ recette.cookTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Temps de repos</td>
+            <td> {{ recette.restTime }} min.</td>
+        </tr>
+        <tr>
+            <td> Auteur</td>
+            <td> {{ recette.owner }}</td>
+        </tr>
+        <tr>
+            <td> Date de mise en ligne</td>
+            <td> {{ recette.creationDate }}</td>
+        </tr>
+        <tr>
+            <td> Dernière modification</td>
+            <td> {{ recette.modificationDate }}</td>
+        </tr>
+        <tr>
+            <td> Image </td>
+            <td> <img src="{{ recette.images.url }}" alt="{{ recette.title }}" ></td>
+        </tr>
+
+    </table>
+    </div>
+{% endblock %}

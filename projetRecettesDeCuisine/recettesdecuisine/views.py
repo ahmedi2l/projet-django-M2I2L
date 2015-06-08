@@ -57,6 +57,27 @@ def recipeDetail(request, recette_id):
     }
     return render(request, 'recettesdecuisine/recetteDetail.html', context)
 
+def recipeEdit(request, recipe_id):
+    recette = Recette.objects.get(pk=recipe_id)
+    form = RecetteForm(request.POST, request.FILES)
+
+    if request.method == 'POST':  # S'il s'agit d'une requête POST
+        form = RecetteForm(request.POST, request.FILES)  # Nous reprenons les données
+        if form.is_valid():  # Nous vérifions que les données envoyées sont valides
+            # Remplissage automatique des champs owner et ownerId avant sauvegarde
+            form.instance.owner = request.user
+            form.instance.ownerId = request.user.id
+            form.udate()
+            return render(request, 'recettesdecuisine/addRecette_success.html', )
+    else:
+        form = RecetteForm()
+
+    context = {
+        'recette': recette,
+        'form': form,
+    }
+    return render(request, 'recettesdecuisine/recipeEdit.html', context)
+
 
 # Ajout d'une recette
 @login_required()
