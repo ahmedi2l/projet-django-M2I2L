@@ -56,7 +56,7 @@ def recipeDetail(request, recette_id):
         'recette': recette,
     }
     return render(request, 'recettesdecuisine/recetteDetail.html', context)
-
+@login_required()
 def recipeEdit(request, recipe_id):
     recette = Recette.objects.get(pk=recipe_id)
     form = RecetteForm(request.POST, request.FILES)
@@ -98,7 +98,7 @@ def addRecette(request):
     }
     return render(request, 'recettesdecuisine/addRecette.html', context)
 
-
+@login_required()
 def addRecette_success(request):
     return render(request, 'recettesdecuisine/addRecette_success.html', )
 
