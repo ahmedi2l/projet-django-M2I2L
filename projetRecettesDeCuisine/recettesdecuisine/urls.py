@@ -18,6 +18,7 @@ urlpatterns = patterns('',
                        url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recipeDetail, name='recipeDetail'),
 
                        url(r'^recipeSearch/$', views.recipeSearch, name='recipeSearch'),
+                       url(r'^recipeSearchFilter/$', views.recipeSearchFilter, name='recipeSearchFilter'),
                        url(r'^searchResult/$', views.searchResult, name='searchResult'),
 
                        # ex: /5/

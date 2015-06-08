@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm
 
 from django.contrib import auth
-from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm, RecipeNoteForm
+from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm, RecipeFilterForm, RecipeNoteForm
 
 from recettesdecuisine.models import Recette, Choice
 from django.views import generic
@@ -116,22 +116,55 @@ def registerUser_success(request):
 def recipeSearch(request):
     if request.method == 'GET':
         form = RecipeSearchForm(request.GET)
-        if form.is_valid() and request.GET:
-            queryTitle = form.cleaned_data['title']
-            queryByDifficultyLevel = form.cleaned_data['difficultyLevel']
-            queryByTitleOrder = form.cleaned_data['titleOrder']
-            queryByNote = form.cleaned_data['note']
-            queryByPreparationTime = form.cleaned_data['preparationTime']
+        filterform = RecipeFilterForm(request.GET)
 
-            queryResult = Recette.objects.filter(title__icontains=queryTitle)
+        if (form.is_valid() and request.GET) :
+            searchTitle = form.cleaned_data['title']
+
+            queryResult = Recette.objects.filter(title__icontains=searchTitle)
             return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,
+                'filterform': filterform,
                 'queryResult': queryResult,
-                'queryTitle': queryTitle,
+                'searchTitle': searchTitle,
             })
     else:
         form = RecipeSearchForm()
-    return render(request, "recettesdecuisine/searchResult.html", {'form': form, 'queryResult': "noRequest", })
+    return render(request, "recettesdecuisine/searchResult.html", {'form': form, 'filterform': filterform, 'queryResult': "noRequest", })
+
+
+def recipeSearchFilter(request):
+    if request.method == 'GET':
+        filterform = RecipeFilterForm(request.GET)
+        form = RecipeSearchForm(request.GET)
+
+        if (filterform.is_valid() and request.GET):
+            filterTitle = filterform.cleaned_data['title']
+            filterByDifficultyLevel = filterform.cleaned_data['difficultyLevel']
+            filterByTitleOrder = filterform.cleaned_data['titleOrder']
+            filterByNote = filterform.cleaned_data['note']
+            filterByPreparationTime = filterform.cleaned_data['preparationTime']
+
+            if filterByTitleOrder != '1' :
+                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-title')
+            elif filterByPreparationTime != '1' :
+                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-preparationTime')
+            elif filterByNote !='1' :
+                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-note')
+            else:
+                queryResult = Recette.objects.filter(title__icontains=filterTitle)
+
+
+            return render(request, "recettesdecuisine/searchResult.html", {
+                'filterform': filterform,
+                'form': form,
+                'queryResult': queryResult,
+            })
+    else:
+        filterform = RecipeFilterForm()
+        form = RecipeSearchForm()
+    return render(request, "recettesdecuisine/searchResult.html", {'filterform': filterform, 'form': form, 'queryResult': "noRequest"})
+
 
 # Résultat des recherches
 def searchResult(request):

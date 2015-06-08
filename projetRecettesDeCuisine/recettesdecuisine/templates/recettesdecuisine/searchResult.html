@@ -8,23 +8,13 @@
 {% block content %}
 
 
-    <form action="{% url 'recettesdecuisine:recipeSearch' %}" method="GET">
+    <form action="{% url 'recettesdecuisine:recipeSearchFilter' %}" method="GET">
         {% comment %}
             {% csrf_token %}
             {{ form.as_p }}
             {% endcomment %}
-        <input type="hidden" name="title" id="title" value="{{ queryTitle }}"/>
-        {{ form.titleOrder.label }}
-        {{ form.titleOrder }}
 
-        {{ form.difficultyLevel.label }}
-        {{ form.difficultyLevel }}
-
-        {{ form.preparationTime.label }}
-        {{ form.preparationTime }}
-
-        {{ form.note.label }}
-        {{ form.note }}
+        {{ filterform }}
         <input type="submit" value="Filtrer"/>
     </form>
 
