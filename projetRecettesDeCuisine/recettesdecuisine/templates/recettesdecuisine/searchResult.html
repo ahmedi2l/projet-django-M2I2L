@@ -14,7 +14,17 @@
             {{ form.as_p }}
             {% endcomment %}
 
-        {{ filterform }}
+        {{ filterform.titleOrder.label }}
+        {{ filterform.titleOrder }}
+
+        {{ filterform.preparationTime.label }}
+        {{ filterform.preparationTime }}
+
+        {{ filterform.note.label }}
+        {{ filterform.note }}
+        
+        {{ filterform.difficultyLevel.label }}
+        {{ filterform.difficultyLevel }}
         <input type="submit" value="Filtrer"/>
     </form>
 
