@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                        url(r'^registerUser_success/$', views.registerUser_success, name='registerUser_success'),
                        url(r'^addRecette$', views.addRecette, name='addRecette'),
                        url(r'^addRecette_success/$', views.addRecette_success, name='addRecette_success'),
-
+                       url(r'^addIngredient/$', views.addIngredient, name='addIngredient'),
                        url(r'^recetteList$', views.RecetteListView.as_view(), name='recetteList'),
                        url(r'^recettedetail/(?P<recette_id>\d+)/$', views.recipeDetail, name='recipeDetail'),
                        url(r'^recipeEdit/(?P<recipe_id>\d+)/$', views.recipeEdit, name='recipeEdit'),

@@ -22,7 +22,7 @@ class Recette(models.Model):
     difficultyLevel = models.CharField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
                                        default='simple')
     cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2,
-                               validators=[validators.MinValueValidator(0)], blank= True, null=True)
+                               validators=[validators.MinValueValidator(0)], blank=True, null=True)
     images = models.ImageField(upload_to="images")
     preparationTime = models.PositiveIntegerField("Temps de préparation (min.)", blank=True, null=True)
     cookTime = models.PositiveIntegerField("Temps de cuisson (min.)", blank=True, null=True)
@@ -31,10 +31,8 @@ class Recette(models.Model):
     modificationDate = models.DateTimeField("Date de modification", auto_now=True, default=creationDate)
     ownerId = models.PositiveIntegerField("Id de l'auteur", blank=True)
     owner = models.ForeignKey(User, blank=True, null=True)
-
-
+    ingredientsList = models.ManyToManyField("Ingredient", null=True, blank=True, verbose_name=u"Ingrédients")
     '''
-    ingredientsListe = models.CharField(max_length=200)
     preparationSteps = models.CharField(max_length=200)
     mark = models.CharField(max_length=200)
     comment = models.CharField(max_length=200)
@@ -46,10 +44,21 @@ class Recette(models.Model):
 
 class Choice(models.Model):
     recette = models.ForeignKey(Recette)
-    #comment = models.TextField("Commentaire", max_length=200, blank=True, null=True)
+    # comment = models.TextField("Commentaire", max_length=200, blank=True, null=True)
     NOTES_CHOICES = [(i, i) for i in range(11)]
     note = models.PositiveIntegerField("Note", choices=NOTES_CHOICES)
     votes = models.IntegerField(default=0)
 
     def __int__(self):  # __unicode__ on Python 2
         return self.note
+
+
+class Ingredient(models.Model):
+    class Meta:
+        verbose_name = "Ingrédient"
+        verbose_name_plural = "Ingrédients"
+
+    ingredient = models.CharField(u"Ingrédient", max_length=30, unique=True)
+
+    def __str__(self):
+        return self.ingredient

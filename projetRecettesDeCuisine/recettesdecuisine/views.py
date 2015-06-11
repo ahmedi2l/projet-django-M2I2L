@@ -1,15 +1,16 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from .forms import RecetteForm
+from .forms import RecetteForm, IngredientForm
 
 from django.contrib import auth
 from recettesdecuisine.forms import RegisterUserForm, RecipeSearchForm, RecipeFilterForm, RecipeNoteForm
 
-from recettesdecuisine.models import Recette, Choice
+from recettesdecuisine.models import Recette, Choice, Ingredient
 from django.views import generic
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.forms.models import modelformset_factory
 from django.db.models import Q
 
 
@@ -56,6 +57,8 @@ def recipeDetail(request, recette_id):
         'recette': recette,
     }
     return render(request, 'recettesdecuisine/recetteDetail.html', context)
+
+
 @login_required()
 def recipeEdit(request, recipe_id):
     recette = Recette.objects.get(pk=recipe_id)
@@ -92,11 +95,13 @@ def addRecette(request):
             return render(request, 'recettesdecuisine/addRecette_success.html', )
     else:
         form = RecetteForm()
+        addIngredientForm = IngredientForm(request.POST)
 
     context = {
         'form': form,
     }
     return render(request, 'recettesdecuisine/addRecette.html', context)
+
 
 @login_required()
 def addRecette_success(request):
@@ -113,7 +118,7 @@ def loggedin(request):
 
 def logout(request):
     auth.logout(request)
-    return render(request, 'registration/loggedout.html',)
+    return render(request, 'registration/loggedout.html', )
 
 
 # Création d'un compte utilisateur
@@ -139,7 +144,7 @@ def recipeSearch(request):
         form = RecipeSearchForm(request.GET)
         filterform = RecipeFilterForm(request.GET)
 
-        if (form.is_valid() and request.GET) :
+        if (form.is_valid() and request.GET):
             searchTitle = form.cleaned_data['title']
 
             queryResult = Recette.objects.filter(title__icontains=searchTitle)
@@ -151,7 +156,8 @@ def recipeSearch(request):
             })
     else:
         form = RecipeSearchForm()
-    return render(request, "recettesdecuisine/searchResult.html", {'form': form, 'filterform': filterform, 'queryResult': "noRequest", })
+    return render(request, "recettesdecuisine/searchResult.html",
+                  {'form': form, 'filterform': filterform, 'queryResult': "noRequest", })
 
 
 def recipeSearchFilter(request):
@@ -166,15 +172,14 @@ def recipeSearchFilter(request):
             filterByNote = filterform.cleaned_data['note']
             filterByPreparationTime = filterform.cleaned_data['preparationTime']
 
-            if filterByTitleOrder != '1' :
+            if filterByTitleOrder != '1':
                 queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-title')
-            elif filterByPreparationTime != '1' :
+            elif filterByPreparationTime != '1':
                 queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-preparationTime')
-            elif filterByNote !='1' :
+            elif filterByNote != '1':
                 queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-note')
             else:
                 queryResult = Recette.objects.filter(title__icontains=filterTitle)
-
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'filterform': filterform,
@@ -184,12 +189,13 @@ def recipeSearchFilter(request):
     else:
         filterform = RecipeFilterForm()
         form = RecipeSearchForm()
-    return render(request, "recettesdecuisine/searchResult.html", {'filterform': filterform, 'form': form, 'queryResult': "noRequest"})
+    return render(request, "recettesdecuisine/searchResult.html",
+                  {'filterform': filterform, 'form': form, 'queryResult': "noRequest"})
 
 
 # Résultat des recherches
 def searchResult(request):
-    return render(request, "recettesdecuisine/searchResult.html",)
+    return render(request, "recettesdecuisine/searchResult.html", )
 
 
 class DetailView(generic.DetailView):
@@ -206,6 +212,7 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Recette
     template_name = 'recettesdecuisine/results.html'
+
 
 @login_required()
 def vote(request, recette_id):
@@ -226,13 +233,14 @@ def vote(request, recette_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('recettesdecuisine:results', args=(p.id,)))
 
+
 @login_required()
-def addNote(request) :
+def addNote(request):
     if request.method == 'POST':  # S'il s'agit d'une requête POST
         form = RecipeNoteForm(request.POST)  # Nous reprenons les données
         if form.is_valid():  # Nous vérifions que les données envoyées sont valides
             # Remplissage automatique des champs owner et ownerId avant sauvegarde
-            #form.instance.owner = request.user
+            # form.instance.owner = request.user
             form.save()
             return render(request, 'recettesdecuisine/addNote.html', )
     else:
@@ -242,3 +250,19 @@ def addNote(request) :
         'form': form,
     }
     return render(request, 'recettesdecuisine/addNote.html', context)
+
+
+@login_required()
+def addIngredient(request):
+    if request.method == 'POST':
+        addIngredientForm = IngredientForm(request.POST)
+        if addIngredientForm.is_valid():
+            c = addIngredientForm.clean()
+            c = addIngredientForm.save()
+
+            return HttpResponseRedirect('/addRecette')
+    else:
+        addIngredientForm = IngredientForm()
+
+    return render(request, 'recettesdecuisine/addIngredient.html', {'addIngredientForm': addIngredientForm, })
+
