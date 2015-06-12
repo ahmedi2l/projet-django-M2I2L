@@ -42,10 +42,14 @@ class RecetteForm(forms.ModelForm):
 
 class RecipeSearchForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False)
+    ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
+                                                required=False, widget=forms.widgets.CheckboxSelectMultiple)
 
 
 class RecipeFilterForm(forms.Form):
-    title = forms.CharField(label='Titre', max_length=200, required=False)
+    title = forms.CharField(label='Titre', max_length=200, required=False, widget=forms.widgets.HiddenInput)
+    ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
+                                                required=False, widget=forms.widgets.MultipleHiddenInput)
     ORDER_CHOICES = (
         (1, u'Croissant'),
         (2, u'Décroissant'),
@@ -71,4 +75,3 @@ class IngredientForm(forms.ModelForm):
     class Meta:
         model = Ingredient
         fields = ('ingredient',)
-

@@ -5,7 +5,19 @@
             {% csrf_token %}
              <input type="text" name="title" id="title" value=""/>
             {% endcomment %}
-        {{ form }}
+        <p>
+        {{ form.title.label }}
+            {{ form.title }}
+        </p>
+        <p>
+        {{ form.ingredients.label }} :
+        {% for i in form.ingredients %}
+            {{ i }}
+            {% empty %}
+                Aucun ingrédient disponible!
+                <p><a href={% url 'recettesdecuisine:addIngredient' %}> Ajouter un ingrédient </a></p>
+        {% endfor %}
+        </p>
         <input type="submit" value="Rechercher"/>
     </fieldset>
 </form>

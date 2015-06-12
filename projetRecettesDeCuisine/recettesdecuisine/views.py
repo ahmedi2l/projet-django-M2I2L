@@ -146,8 +146,9 @@ def recipeSearch(request):
 
         if (form.is_valid() and request.GET):
             searchTitle = form.cleaned_data['title']
+            searchIngredients = form.cleaned_data['ingredients']
 
-            queryResult = Recette.objects.filter(title__icontains=searchTitle)
+            queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) | Q(ingredientsList__in=searchIngredients))
             return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,
                 'filterform': filterform,
@@ -167,19 +168,20 @@ def recipeSearchFilter(request):
 
         if (filterform.is_valid() and request.GET):
             filterTitle = filterform.cleaned_data['title']
+            filterIngredients = filterform.cleaned_data['ingredients']
             filterByDifficultyLevel = filterform.cleaned_data['difficultyLevel']
             filterByTitleOrder = filterform.cleaned_data['titleOrder']
             filterByNote = filterform.cleaned_data['note']
             filterByPreparationTime = filterform.cleaned_data['preparationTime']
 
             if filterByTitleOrder != '1':
-                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-title')
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-title')
             elif filterByPreparationTime != '1':
-                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-preparationTime')
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-preparationTime')
             elif filterByNote != '1':
-                queryResult = Recette.objects.filter(title__icontains=filterTitle).order_by('-note')
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-note')
             else:
-                queryResult = Recette.objects.filter(title__icontains=filterTitle)
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients))
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'filterform': filterform,
