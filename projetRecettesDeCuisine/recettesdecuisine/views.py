@@ -266,3 +266,18 @@ def addIngredient(request):
 
     return render(request, 'recettesdecuisine/addIngredient.html', {'addIngredientForm': addIngredientForm, })
 
+def editIngredient(request):
+
+    ingregientFormSet = modelformset_factory(Ingredient, extra=0, can_delete=True, form=IngredientForm)
+
+    if request.method == 'POST':
+        formset = ingregientFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            c = formset.save()
+            return HttpResponseRedirect('/addRecette')
+    else:
+        formset = ingregientFormSet()
+
+    return render(request,'recettesdecuisine/editIngredient.html', {'formset': formset,})
+
+
