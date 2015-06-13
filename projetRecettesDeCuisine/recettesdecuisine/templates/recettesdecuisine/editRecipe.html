@@ -1,0 +1,22 @@
+{% extends 'base_site.html' %}
+
+{% block content %}
+
+
+    <h1> Edition de la recette </h1>
+
+    {% if form.errors %}
+        <p style="color: red;"> Veuillez corrigez l'erreur ci-dessous :</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'recettesdecuisine:editRecipe' recipe_id %}" enctype="multipart/form-data">
+        <fieldset>
+            <legend> Informations sur la recette :</legend>
+            {% csrf_token %}
+
+            {{ formset }}
+            <input type="submit" value="Sauvegarder"/>
+        </fieldset>
+    </form>
+
+{% endblock %}
