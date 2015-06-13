@@ -44,12 +44,25 @@ class RecipeSearchForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False)
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
                                                 required=False, widget=forms.widgets.CheckboxSelectMultiple)
+    OPERATOR_CHOICES = (
+        (1,u'Ou'),
+        (2,u'Et')
+    )
+    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial=1)
 
 
 class RecipeFilterForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False, widget=forms.widgets.HiddenInput)
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
                                                 required=False, widget=forms.widgets.MultipleHiddenInput)
+    OPERATOR_CHOICES = (
+        (1,u'Ou'),
+        (2,u'Et')
+    )
+    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial=1,
+                                 widget=forms.widgets.HiddenInput)
+
+
     ORDER_CHOICES = (
         (1, u'Croissant'),
         (2, u'Décroissant'),

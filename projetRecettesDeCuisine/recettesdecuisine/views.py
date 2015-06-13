@@ -58,21 +58,21 @@ def recipeDetail(request, recette_id):
     }
     return render(request, 'recettesdecuisine/recetteDetail.html', context)
 
+
 # Édition (modification) d'une récette
 @login_required()
 def editRecipe(request, recipe_id):
-
     # Vérification si la recette appartient à l'utilisateur
     recette = Recette.objects.get(pk=recipe_id)
-    if recette.ownerId != request.user.id :
+    if recette.ownerId != request.user.id:
         return HttpResponseForbidden("Accès interdit")
 
-    editRecipeFormSet = modelformset_factory(Recette, extra=0, can_delete=True, form=RecetteForm,)
+    editRecipeFormSet = modelformset_factory(Recette, extra=0, can_delete=True, form=RecetteForm, )
     if request.method == 'POST':
         formset = editRecipeFormSet(request.POST, request.FILES, queryset=Recette.objects.filter(pk=recipe_id))
         if formset.is_valid():
             c = formset.save()
-            return HttpResponseRedirect('/recettedetail/'+recipe_id)
+            return HttpResponseRedirect('/recettedetail/' + recipe_id)
     else:
         formset = editRecipeFormSet(queryset=Recette.objects.filter(pk=recipe_id))
 
@@ -144,8 +144,15 @@ def recipeSearch(request):
         if (form.is_valid() and request.GET):
             searchTitle = form.cleaned_data['title']
             searchIngredients = form.cleaned_data['ingredients']
+            searchOperator = form.cleaned_data['operator']
 
-            queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) | Q(ingredientsList__in=searchIngredients))
+            if searchOperator == "1":
+                queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) |
+                                                     Q(ingredientsList__in=searchIngredients))
+            else:
+                queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) &
+                                                     Q(ingredientsList__in=searchIngredients))
+
             return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,
                 'filterform': filterform,
@@ -166,19 +173,37 @@ def recipeSearchFilter(request):
         if (filterform.is_valid() and request.GET):
             filterTitle = filterform.cleaned_data['title']
             filterIngredients = filterform.cleaned_data['ingredients']
+            searchOperator = filterform.cleaned_data['operator']
+            seach_title_or_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) |
+                                                               Q(ingredientsList__in=filterIngredients))
+            seach_title_and_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) &
+                                                                Q(ingredientsList__in=filterIngredients))
             filterByDifficultyLevel = filterform.cleaned_data['difficultyLevel']
             filterByTitleOrder = filterform.cleaned_data['titleOrder']
             filterByNote = filterform.cleaned_data['note']
             filterByPreparationTime = filterform.cleaned_data['preparationTime']
 
-            if filterByTitleOrder != '1':
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-title')
-            elif filterByPreparationTime != '1':
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-preparationTime')
-            elif filterByNote != '1':
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients)).order_by('-note')
+            if (searchOperator == "1") and (filterByTitleOrder != '1'):
+                queryResult = seach_title_or_ingredient.order_by('-title')
+            elif (searchOperator == "2") and (filterByTitleOrder != '1'):
+                queryResult = seach_title_and_ingredient.order_by('-title')
+
+            elif (searchOperator == "1") and (filterByPreparationTime != '1'):
+                queryResult = seach_title_or_ingredient.order_by('-preparationTime')
+            elif (searchOperator == "2") and (filterByPreparationTime != '1'):
+                queryResult = seach_title_and_ingredient.order_by('-preparationTime')
+
+            elif (searchOperator == "1") and (filterByNote != '1'):
+                queryResult = seach_title_or_ingredient.order_by('-note')
+            elif (searchOperator == "2") and (filterByNote != '1'):
+                queryResult = seach_title_and_ingredient.order_by('-note')
+
+            elif searchOperator == "1":
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) |
+                                                     Q(ingredientsList__in=filterIngredients))
             else:
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) | Q(ingredientsList__in=filterIngredients))
+                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) &
+                                                     Q(ingredientsList__in=filterIngredients))
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'filterform': filterform,
@@ -265,8 +290,8 @@ def addIngredient(request):
 
     return render(request, 'recettesdecuisine/addIngredient.html', {'addIngredientForm': addIngredientForm, })
 
-def editIngredient(request):
 
+def editIngredient(request):
     ingregientFormSet = modelformset_factory(Ingredient, extra=0, can_delete=True, form=IngredientForm)
 
     if request.method == 'POST':
@@ -277,6 +302,6 @@ def editIngredient(request):
     else:
         formset = ingregientFormSet()
 
-    return render(request,'recettesdecuisine/editIngredient.html', {'formset': formset})
+    return render(request, 'recettesdecuisine/editIngredient.html', {'formset': formset})
 
 
