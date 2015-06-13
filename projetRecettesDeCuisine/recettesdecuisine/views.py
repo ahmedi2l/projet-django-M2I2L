@@ -1,5 +1,5 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .forms import RecetteForm, IngredientForm
 
@@ -61,6 +61,12 @@ def recipeDetail(request, recette_id):
 # Édition (modification) d'une récette
 @login_required()
 def editRecipe(request, recipe_id):
+
+    # Vérification si la recette appartient à l'utilisateur
+    recette = Recette.objects.get(pk=recipe_id)
+    if recette.ownerId != request.user.id :
+        return HttpResponseForbidden("Accès interdit")
+
     editRecipeFormSet = modelformset_factory(Recette, extra=0, can_delete=True, form=RecetteForm,)
     if request.method == 'POST':
         formset = editRecipeFormSet(request.POST, request.FILES, queryset=Recette.objects.filter(pk=recipe_id))
