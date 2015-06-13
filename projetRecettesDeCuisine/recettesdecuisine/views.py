@@ -58,28 +58,19 @@ def recipeDetail(request, recette_id):
     }
     return render(request, 'recettesdecuisine/recetteDetail.html', context)
 
-
+# Édition (modification) d'une récette
 @login_required()
-def recipeEdit(request, recipe_id):
-    recette = Recette.objects.get(pk=recipe_id)
-    form = RecetteForm(request.POST, request.FILES)
-
-    if request.method == 'POST':  # S'il s'agit d'une requête POST
-        form = RecetteForm(request.POST, request.FILES)  # Nous reprenons les données
-        if form.is_valid():  # Nous vérifions que les données envoyées sont valides
-            # Remplissage automatique des champs owner et ownerId avant sauvegarde
-            form.instance.owner = request.user
-            form.instance.ownerId = request.user.id
-            form.udate()
-            return render(request, 'recettesdecuisine/addRecette_success.html', )
+def editRecipe(request, recipe_id):
+    editRecipeFormSet = modelformset_factory(Recette, extra=0, can_delete=True, form=RecetteForm,)
+    if request.method == 'POST':
+        formset = editRecipeFormSet(request.POST, request.FILES, queryset=Recette.objects.filter(pk=recipe_id))
+        if formset.is_valid():
+            c = formset.save()
+            return HttpResponseRedirect('/recettedetail/'+recipe_id)
     else:
-        form = RecetteForm()
+        formset = editRecipeFormSet(queryset=Recette.objects.filter(pk=recipe_id))
 
-    context = {
-        'recette': recette,
-        'form': form,
-    }
-    return render(request, 'recettesdecuisine/recipeEdit.html', context)
+    return render(request, 'recettesdecuisine/editRecipe.html', {'formset': formset, 'recipe_id': recipe_id})
 
 
 # Ajout d'une recette
@@ -280,6 +271,6 @@ def editIngredient(request):
     else:
         formset = ingregientFormSet()
 
-    return render(request,'recettesdecuisine/editIngredient.html', {'formset': formset,})
+    return render(request,'recettesdecuisine/editIngredient.html', {'formset': formset})
 
 
