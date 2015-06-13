@@ -135,7 +135,7 @@ def registerUser(request):
 def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
-
+from itertools import chain
 def recipeSearch(request):
     if request.method == 'GET':
         form = RecipeSearchForm(request.GET)
@@ -148,10 +148,10 @@ def recipeSearch(request):
 
             if searchOperator == "1":
                 queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) |
-                                                     Q(ingredientsList__in=searchIngredients))
+                                                     Q(ingredientsList__in=searchIngredients)).distinct()
             else:
                 queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) &
-                                                     Q(ingredientsList__in=searchIngredients))
+                                                     Q(ingredientsList__in=searchIngredients)).distinct()
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'form': form,
@@ -175,9 +175,9 @@ def recipeSearchFilter(request):
             filterIngredients = filterform.cleaned_data['ingredients']
             searchOperator = filterform.cleaned_data['operator']
             seach_title_or_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) |
-                                                               Q(ingredientsList__in=filterIngredients))
+                                                               Q(ingredientsList__in=filterIngredients)).distinct()
             seach_title_and_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) &
-                                                                Q(ingredientsList__in=filterIngredients))
+                                                                Q(ingredientsList__in=filterIngredients)).distinct()
             filterByDifficultyLevel = filterform.cleaned_data['difficultyLevel']
             filterByTitleOrder = filterform.cleaned_data['titleOrder']
             filterByNote = filterform.cleaned_data['note']
@@ -200,10 +200,10 @@ def recipeSearchFilter(request):
 
             elif searchOperator == "1":
                 queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) |
-                                                     Q(ingredientsList__in=filterIngredients))
+                                                     Q(ingredientsList__in=filterIngredients)).distinct()
             else:
                 queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) &
-                                                     Q(ingredientsList__in=filterIngredients))
+                                                     Q(ingredientsList__in=filterIngredients)).distinct()
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'filterform': filterform,
