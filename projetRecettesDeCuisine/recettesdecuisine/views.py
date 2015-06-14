@@ -135,7 +135,10 @@ def registerUser(request):
 def registerUser_success(request):
     return render(request, 'registration/registerUser_success.html', )
 
+
 from itertools import chain
+
+
 def recipeSearch(request):
     if request.method == 'GET':
         form = RecipeSearchForm(request.GET)
@@ -146,7 +149,7 @@ def recipeSearch(request):
             searchIngredients = form.cleaned_data['ingredients']
             searchOperator = form.cleaned_data['operator']
 
-            if searchOperator == "1":
+            if searchOperator == "or":
                 queryResult = Recette.objects.filter(Q(title__icontains=searchTitle) |
                                                      Q(ingredientsList__in=searchIngredients)).distinct()
             else:
@@ -158,6 +161,8 @@ def recipeSearch(request):
                 'filterform': filterform,
                 'queryResult': queryResult,
                 'searchTitle': searchTitle,
+                'searchIngredients': searchIngredients,
+                'searchOperator': searchOperator
             })
     else:
         form = RecipeSearchForm()
@@ -171,39 +176,53 @@ def recipeSearchFilter(request):
         form = RecipeSearchForm(request.GET)
 
         if (filterform.is_valid() and request.GET):
-            filterTitle = filterform.cleaned_data['title']
-            filterIngredients = filterform.cleaned_data['ingredients']
+            searchTitle = filterform.cleaned_data['title']
+            searchIngredients = filterform.cleaned_data['ingredients']
             searchOperator = filterform.cleaned_data['operator']
-            seach_title_or_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) |
-                                                               Q(ingredientsList__in=filterIngredients)).distinct()
-            seach_title_and_ingredient = Recette.objects.filter(Q(title__icontains=filterTitle) &
-                                                                Q(ingredientsList__in=filterIngredients)).distinct()
-            filterByDifficultyLevel = filterform.cleaned_data['difficultyLevel']
-            filterByTitleOrder = filterform.cleaned_data['titleOrder']
-            filterByNote = filterform.cleaned_data['note']
-            filterByPreparationTime = filterform.cleaned_data['preparationTime']
 
-            if (searchOperator == "1") and (filterByTitleOrder != '1'):
-                queryResult = seach_title_or_ingredient.order_by('-title')
-            elif (searchOperator == "2") and (filterByTitleOrder != '1'):
-                queryResult = seach_title_and_ingredient.order_by('-title')
+            titleOrder = filterform.cleaned_data['titleOrder']
+            difficultyLevelOrder = filterform.cleaned_data['difficultyLevelOrder']
+            preparationTimeOrder = filterform.cleaned_data['preparationTimeOrder']
 
-            elif (searchOperator == "1") and (filterByPreparationTime != '1'):
-                queryResult = seach_title_or_ingredient.order_by('-preparationTime')
-            elif (searchOperator == "2") and (filterByPreparationTime != '1'):
-                queryResult = seach_title_and_ingredient.order_by('-preparationTime')
+            noteOrder = filterform.cleaned_data['noteOrder']
+            seach_title_or_ingredient = Recette.objects.filter(Q(title__icontains=searchTitle) |
+                                                               Q(ingredientsList__in=searchIngredients)).distinct()
+            seach_title_and_ingredient = Recette.objects.filter(Q(title__icontains=searchTitle) &
+                                                                Q(ingredientsList__in=searchIngredients)).distinct()
 
-            elif (searchOperator == "1") and (filterByNote != '1'):
-                queryResult = seach_title_or_ingredient.order_by('-note')
-            elif (searchOperator == "2") and (filterByNote != '1'):
-                queryResult = seach_title_and_ingredient.order_by('-note')
+            if titleOrder == '1':
+                orderByTitle = 'title'
+                orderByDifficultyLevel = '?'
+                orderPreparationTime = '?'
+            elif titleOrder == '2':
+                orderByTitle = '-title'
+                orderByDifficultyLevel = '?'
+                orderPreparationTime = '?'
 
-            elif searchOperator == "1":
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) |
-                                                     Q(ingredientsList__in=filterIngredients)).distinct()
-            else:
-                queryResult = Recette.objects.filter(Q(title__icontains=filterTitle) &
-                                                     Q(ingredientsList__in=filterIngredients)).distinct()
+            if difficultyLevelOrder == '1':
+                orderByDifficultyLevel = 'difficultyLevel'
+                orderByTitle = '?'
+                orderPreparationTime = '?'
+            elif difficultyLevelOrder == '2':
+                orderByDifficultyLevel = '-difficultyLevel'
+                orderByTitle = '?'
+                orderPreparationTime = '?'
+
+            if preparationTimeOrder == '1':
+                orderPreparationTime = 'preparationTime'
+                orderByTitle = '?'
+                orderByDifficultyLevel = '?'
+            elif preparationTimeOrder == '2':
+                orderPreparationTime = '-preparationTime'
+                orderByTitle = '?'
+                orderByDifficultyLevel = '?'
+
+            if searchOperator == "or":
+                queryResult = seach_title_or_ingredient.order_by(orderByTitle, orderByDifficultyLevel,
+                                                                 orderPreparationTime)
+            elif searchOperator == "and":
+                queryResult = seach_title_and_ingredient.order_by(orderByTitle, orderByDifficultyLevel,
+                                                                  orderPreparationTime)
 
             return render(request, "recettesdecuisine/searchResult.html", {
                 'filterform': filterform,
@@ -214,7 +233,7 @@ def recipeSearchFilter(request):
         filterform = RecipeFilterForm()
         form = RecipeSearchForm()
     return render(request, "recettesdecuisine/searchResult.html",
-                  {'filterform': filterform, 'form': form, 'queryResult': "noRequest"})
+                  {'filterform': filterform, 'form': form})
 
 
 # Résultat des recherches

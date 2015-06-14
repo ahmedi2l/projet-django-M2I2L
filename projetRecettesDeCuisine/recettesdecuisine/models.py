@@ -15,12 +15,12 @@ class Recette(models.Model):
     )
     type = models.CharField("Type", max_length=30, choices=TYPE_CHOICES, default='platPrincipal', editable=True)
     DIFFICULTY_CHOICES = (
-        ('simple', 'Simple'),
-        ('moyen', 'Moyen'),
-        ('difficile', 'Difficile'),
+        (1, u'Simple'),
+        (2, u'Moyen'),
+        (3, u'Difficile'),
     )
-    difficultyLevel = models.CharField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
-                                       default='simple')
+    difficultyLevel = models.IntegerField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
+                                       default='Simple')
     cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2,
                                validators=[validators.MinValueValidator(0)], blank=True, null=True)
     images = models.ImageField(upload_to="images", default='images/image_non_disponible.png')

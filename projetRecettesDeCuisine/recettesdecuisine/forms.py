@@ -45,10 +45,10 @@ class RecipeSearchForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
                                                 required=False, widget=forms.widgets.CheckboxSelectMultiple)
     OPERATOR_CHOICES = (
-        (1,u'Ou'),
-        (2,u'Et')
+        ('or',u'Ou'),
+        ('and',u'Et')
     )
-    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial=1)
+    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial='or')
 
 
 class RecipeFilterForm(forms.Form):
@@ -56,10 +56,10 @@ class RecipeFilterForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
                                                 required=False, widget=forms.widgets.MultipleHiddenInput)
     OPERATOR_CHOICES = (
-        (1,u'Ou'),
-        (2,u'Et')
+        ('or', u'Ou'),
+        ('and', u'Et')
     )
-    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial=1,
+    operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial='or',
                                  widget=forms.widgets.HiddenInput)
 
 
@@ -68,14 +68,9 @@ class RecipeFilterForm(forms.Form):
         (2, u'Décroissant'),
     )
     titleOrder = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Titre', required=False)
-    DIFFICULTY_CHOICES = (
-        (1, u'Simple'),
-        (2, u'Moyen'),
-        (3, u'Difficile'),
-    )
-    difficultyLevel = forms.ChoiceField(choices=DIFFICULTY_CHOICES, label=u"Difficulté de préparation", required=False)
-    preparationTime = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Temps de préparation', required=False)
-    note = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Note Moyenne', required=False)
+    difficultyLevelOrder = forms.ChoiceField(choices=ORDER_CHOICES, label=u"Difficulté de préparation", required=False)
+    preparationTimeOrder = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Temps de préparation', required=False)
+    noteOrder = forms.ChoiceField(choices=ORDER_CHOICES, label=u'Note Moyenne', required=False)
 
 
 class RecipeNoteForm(forms.ModelForm):
