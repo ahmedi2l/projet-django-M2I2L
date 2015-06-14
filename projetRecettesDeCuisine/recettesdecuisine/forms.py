@@ -1,5 +1,5 @@
 from django import forms
-from .models import Recette, Choice, Ingredient
+from .models import Recette, Choice, Ingredient, PreparationSteps
 
 from  django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -22,7 +22,7 @@ class RecetteForm(forms.ModelForm):
     class Meta:
         model = Recette
         fields = ('title', 'type', 'difficultyLevel', 'cost', 'preparationTime',
-                  'cookTime', 'restTime', 'images', 'ingredientsList')
+                  'cookTime', 'restTime', 'images', 'preparationSteps', 'ingredientsList')
         labels = {
             'title': "Titre",
             'difficultyLevel': "Niveau de difficulté",
@@ -43,10 +43,10 @@ class RecetteForm(forms.ModelForm):
 class RecipeSearchForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False)
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
-                                                required=False, widget=forms.widgets.CheckboxSelectMultiple)
+                                                 required=False, widget=forms.widgets.CheckboxSelectMultiple)
     OPERATOR_CHOICES = (
-        ('or',u'Ou'),
-        ('and',u'Et')
+        ('or', u'Ou'),
+        ('and', u'Et')
     )
     operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial='or')
 
@@ -54,14 +54,13 @@ class RecipeSearchForm(forms.Form):
 class RecipeFilterForm(forms.Form):
     title = forms.CharField(label='Titre', max_length=200, required=False, widget=forms.widgets.HiddenInput)
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(), label=u"Ingrédients",
-                                                required=False, widget=forms.widgets.MultipleHiddenInput)
+                                                 required=False, widget=forms.widgets.MultipleHiddenInput)
     OPERATOR_CHOICES = (
         ('or', u'Ou'),
         ('and', u'Et')
     )
     operator = forms.ChoiceField(choices=OPERATOR_CHOICES, label=u'Opérateur', initial='or',
                                  widget=forms.widgets.HiddenInput)
-
 
     ORDER_CHOICES = (
         (1, u'Croissant'),
@@ -76,7 +75,7 @@ class RecipeFilterForm(forms.Form):
 class RecipeNoteForm(forms.ModelForm):
     class Meta:
         model = Choice
-        fields = ('recette', 'note',)
+        fields = ('recette', 'note', 'comment')
 
 
 class IngredientForm(forms.ModelForm):

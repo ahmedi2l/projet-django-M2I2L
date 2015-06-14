@@ -53,10 +53,23 @@ def index(request):
 def recipeDetail(request, recette_id):
     recette = Recette.objects.get(pk=recette_id)
 
-    context = {
-        'recette': recette,
-    }
-    return render(request, 'recettesdecuisine/recetteDetail.html', context)
+    if request.method == 'POST':
+        commentForm = RecetteForm(request.POST, recette_id)
+        if commentForm.is_valid():
+            c = commentForm.save()
+            return HttpResponseRedirect('')
+    else:
+        commentForm = RecetteForm()
+
+    return render(request, 'recettesdecuisine/recetteDetail.html', {'commentForm': commentForm, 'recette': recette})
+
+
+
+    # context = {
+    # 'recette': recette,
+    #     'commentForm': commentForm,
+    # }
+    # return render(request, 'recettesdecuisine/recetteDetail.html', context)
 
 
 # Édition (modification) d'une récette
@@ -92,7 +105,6 @@ def addRecette(request):
             return render(request, 'recettesdecuisine/addRecette_success.html', )
     else:
         form = RecetteForm()
-        addIngredientForm = IngredientForm(request.POST)
 
     context = {
         'form': form,
@@ -241,20 +253,20 @@ def searchResult(request):
     return render(request, "recettesdecuisine/searchResult.html", )
 
 
-class DetailView(generic.DetailView):
+class EvaluateRecipe(generic.DetailView):
     model = Recette
-    template_name = 'recettesdecuisine/detail.html'
+    template_name = 'recettesdecuisine/evaluateRecipe.html'
 
     def get_context_data(self, **kwargs):
         form = RecipeNoteForm()
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(EvaluateRecipe, self).get_context_data(**kwargs)
         context['form'] = form
         return context
 
 
-class ResultsView(generic.DetailView):
+class EvaluateResults(generic.DetailView):
     model = Recette
-    template_name = 'recettesdecuisine/results.html'
+    template_name = 'recettesdecuisine/evaluateResults.html'
 
 
 @login_required()
@@ -263,18 +275,14 @@ def vote(request, recette_id):
     try:
         selected_choice = p.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'recettesdecuisine/detail.html', {
+        return render(request, 'recettesdecuisine/evaluateRecipe.html', {
             'recette': p,
             'error_message': "Vous avez sélectionner aucune note!",
         })
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('recettesdecuisine:results', args=(p.id,)))
+        return HttpResponseRedirect(reverse('recettesdecuisine:evaluateResults', args=(p.id,)))
 
 
 @login_required()
@@ -285,7 +293,7 @@ def addNote(request):
             # Remplissage automatique des champs owner et ownerId avant sauvegarde
             # form.instance.owner = request.user
             form.save()
-            return render(request, 'recettesdecuisine/addNote.html', )
+            return render(request, 'recettesdecuisine/addNote.html', {'form': form})
     else:
         form = RecipeNoteForm()
 
@@ -322,5 +330,3 @@ def editIngredient(request):
         formset = ingregientFormSet()
 
     return render(request, 'recettesdecuisine/editIngredient.html', {'formset': formset})
-
-

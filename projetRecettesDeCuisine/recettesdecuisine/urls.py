@@ -23,13 +23,14 @@ urlpatterns = patterns('',
                        url(r'^recipeSearchFilter/$', views.recipeSearchFilter, name='recipeSearchFilter'),
                        url(r'^searchResult/$', views.searchResult, name='searchResult'),
 
-                       # ex: /5/
-                       url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
-                       # ex: /5/results/
-                       url(r'^(?P<pk>\d+)/results/$', views.ResultsView.as_view(), name='results'),
+                       # ex: evaluateRecipe/5/
+                       url(r'^evaluateRecipe/(?P<pk>\d+)/$', views.EvaluateRecipe.as_view(), name='evaluateRecipe'),
+                       # ex: evaluateResults/5/results/
+                       url(r'^evaluateResults/(?P<pk>\d+)/results/$', views.EvaluateResults.as_view(), name='evaluateResults'),
                        # ex: /5/vote/
                        url(r'^(?P<recette_id>\d+)/vote/$', views.vote, name='vote'),
 
                        url(r'^addNote/$', views.addNote, name='addNote'),
+                       #url(r'^addComment/(?P<recipe_id>\d+)/$', views.addComment, name='addComment'),
 
                        )

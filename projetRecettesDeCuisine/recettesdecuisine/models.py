@@ -20,10 +20,10 @@ class Recette(models.Model):
         (3, u'Difficile'),
     )
     difficultyLevel = models.IntegerField("Niveau de difficulté", max_length=30, choices=DIFFICULTY_CHOICES,
-                                       default='Simple')
+                                          default='Simple')
     cost = models.DecimalField("Coût (€)", max_digits=5, decimal_places=2,
                                validators=[validators.MinValueValidator(0)], blank=True, null=True)
-    images = models.ImageField(upload_to="images", default='images/image_non_disponible.png')
+    images = models.ImageField(upload_to="images", default='images/image_non_disponible.png', )
     preparationTime = models.PositiveIntegerField("Temps de préparation (min.)", blank=True, null=True)
     cookTime = models.PositiveIntegerField("Temps de cuisson (min.)", blank=True, null=True)
     restTime = models.PositiveIntegerField("Temps de repos (min.)", blank=True, null=True)
@@ -32,25 +32,11 @@ class Recette(models.Model):
     ownerId = models.PositiveIntegerField("Id de l'auteur", blank=True)
     owner = models.ForeignKey(User, blank=True, null=True)
     ingredientsList = models.ManyToManyField("Ingredient", null=True, blank=True, verbose_name=u"Ingrédients")
-    '''
-    preparationSteps = models.CharField(max_length=200)
-    mark = models.CharField(max_length=200)
-    comment = models.CharField(max_length=200)
-    '''
+    avirageNote = models.PositiveIntegerField("Note moyenne", null=True, blank=True)
+    preparationSteps = models.TextField("Étapes de préparation")
 
     def __str__(self):  # __unicode__ on Python 2
         return self.title
-
-
-class Choice(models.Model):
-    recette = models.ForeignKey(Recette)
-    # comment = models.TextField("Commentaire", max_length=200, blank=True, null=True)
-    NOTES_CHOICES = [(i, i) for i in range(11)]
-    note = models.PositiveIntegerField("Note", choices=NOTES_CHOICES)
-    votes = models.IntegerField(default=0)
-
-    def __int__(self):  # __unicode__ on Python 2
-        return self.note
 
 
 class Ingredient(models.Model):
@@ -62,3 +48,25 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.ingredient
+
+
+class PreparationSteps(models.Model):
+    class Meta:
+        verbose_name = "Étape"
+        verbose_name_plural = "Étapes"
+
+    step = models.CharField(u"Étape", max_length=30, unique=True)
+
+    def __str__(self):
+        return self.step
+
+
+class Choice(models.Model):
+    recette = models.ForeignKey(Recette)
+    comment = models.TextField("Commentaire", max_length=200, blank=True, null=True)
+    NOTES_CHOICES = [(i, i) for i in range(11)]
+    note = models.PositiveIntegerField("Note", choices=NOTES_CHOICES, blank=True, null=True)
+    votes = models.IntegerField(default=0)
+
+    def __int__(self):  # __unicode__ on Python 2
+        return self.note

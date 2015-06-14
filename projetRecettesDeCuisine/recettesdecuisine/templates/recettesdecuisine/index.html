@@ -15,11 +15,11 @@
 
         <fieldset style="width: 300px;">
             <legend> Dérnières recettes ajoutées</legend>
-            <ul>
+            <ol>
                 {% for recette in recettesList %}
                     <li><a href={% url 'recettesdecuisine:recipeDetail' recette.id %}> {{ recette.title }} </a></li>
                 {% endfor %}
-            </ul>
+            </ol>
         </fieldset>
 
     {% endif %}

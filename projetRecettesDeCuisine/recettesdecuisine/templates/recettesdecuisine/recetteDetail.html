@@ -56,10 +56,15 @@
 
                 </td>
             </tr>
+
         </table>
 
-        {% if user.id == recette.ownerId %}
-            <p><a href={% url 'recettesdecuisine:editRecipe' recette.id %}> Modifier la recette </a></p>
-        {% endif %}
+        <p>
+            {% if user.id == recette.ownerId %}
+                <a href={% url 'recettesdecuisine:editRecipe' recette.id %}> Modifier la recette </a> <br />
+            {% endif %}
+            <a href={% url 'recettesdecuisine:evaluateRecipe' recette.id %}> Noter la recette et ajouter un commentaire </a>
+        </p>
     </div>
+
 {% endblock %}
