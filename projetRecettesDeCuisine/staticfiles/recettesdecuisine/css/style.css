@@ -1,0 +1,11 @@
+h1 {
+    text-align:left;
+}
+
+li a {
+    color: red;
+}
+
+body {
+    background: white url("../images/recettes.jpeg") no-repeat right bottom;
+}
