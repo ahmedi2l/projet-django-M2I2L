@@ -67,7 +67,7 @@ def recipeDetail(request, recette_id):
 
     # context = {
     # 'recette': recette,
-    #     'commentForm': commentForm,
+    # 'commentForm': commentForm,
     # }
     # return render(request, 'recettesdecuisine/recetteDetail.html', context)
 

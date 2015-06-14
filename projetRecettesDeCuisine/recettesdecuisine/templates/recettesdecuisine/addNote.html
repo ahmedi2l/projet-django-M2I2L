@@ -6,10 +6,10 @@
     <form method="post" action="{% url 'recettesdecuisine:addNote' %}">
         <fieldset>
             <legend> Sélectionner une recette puis chosir la note que vous voulez lui attibuer :</legend>
-        {% csrf_token %}
+            {% csrf_token %}
 
-        {{ form.as_p }}
-        <input type="submit" value="Sauvegarder">
+            {{ form.as_p }}
+            <input type="submit" value="Sauvegarder">
         </fieldset>
     </form>
 

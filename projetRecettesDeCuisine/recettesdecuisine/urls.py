@@ -26,11 +26,12 @@ urlpatterns = patterns('',
                        # ex: evaluateRecipe/5/
                        url(r'^evaluateRecipe/(?P<pk>\d+)/$', views.EvaluateRecipe.as_view(), name='evaluateRecipe'),
                        # ex: evaluateResults/5/results/
-                       url(r'^evaluateResults/(?P<pk>\d+)/results/$', views.EvaluateResults.as_view(), name='evaluateResults'),
+                       url(r'^evaluateResults/(?P<pk>\d+)/results/$', views.EvaluateResults.as_view(),
+                           name='evaluateResults'),
                        # ex: /5/vote/
                        url(r'^(?P<recette_id>\d+)/vote/$', views.vote, name='vote'),
 
                        url(r'^addNote/$', views.addNote, name='addNote'),
-                       #url(r'^addComment/(?P<recipe_id>\d+)/$', views.addComment, name='addComment'),
+                       # url(r'^addComment/(?P<recipe_id>\d+)/$', views.addComment, name='addComment'),
 
                        )
